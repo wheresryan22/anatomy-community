@@ -1,0 +1,19 @@
+{
+  "id": "test-security-id",
+  "title": "Security-test",
+  "author": "wheresryan22",
+  "prompt": "/anatomy Security test",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "skill": {
+    "kit": "sha256:b2fbd67ae3c704977587339387fd68594824ef016e58a3db1339d5b2e0661081",
+    "commit": "689dcf966e63d92be10a5d593c6e19e10acd4422"
+  },
+  "build": [
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "license": "MIT",
+  "created": "2026-10-12"
+}
