@@ -1,0 +1,33 @@
+{
+  "id": "butter-robot",
+  "title": "Butter robot",
+  "author": "Roy-Brain",
+  "prompt": "/anatomy the machine that passes butter from rick and morty, focus on the anatomy of the machine and its purpose. Animated, broken down, in action and show how it works. Then asked for 3D turning, light effects, fluid motion and a more dramatic ending.",
+  "kind": "SVG + WebGL + 3D",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/butter-robot-light.html",
+    "dark": "src/butter-robot.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "robot",
+    "mechanical",
+    "rick-and-morty"
+  ],
+  "created": "2026-10-12"
+}

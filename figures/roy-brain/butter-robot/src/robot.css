@@ -1,0 +1,59 @@
+.br-stage{touch-action:pan-y;outline:none;border-radius:8px;cursor:pointer}
+.br-stage:focus-visible{outline:1px solid var(--anatomy-muted);outline-offset:6px}
+.br-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* The butter is the one thing in colour: it is what the machine is for. */
+[data-name^="butter"]{--anatomy-paper:#3a2f0c;--anatomy-face:#4a3c10;--anatomy-top:#5c4a14;--anatomy-shade-0:#2c240a;--anatomy-shade-1:#342a0b;--anatomy-shade-2:#3e320d;--anatomy-shade-3:#483a0f;--anatomy-lit-top:#6e5918;--anatomy-lit-shade:#54440f;--anatomy-hi:#f3d36a;--anatomy-mid:#a88a2c;--anatomy-lo:#6f5a1c;--anatomy-faint:#544414;--anatomy-dot:#f3d36a;--anatomy-lit:#fff2c2}
+.iso[data-theme="light"] [data-name^="butter"]{--anatomy-paper:#f7de86;--anatomy-face:#f4d675;--anatomy-top:#fbeaa8;--anatomy-shade-0:#ddb84a;--anatomy-shade-1:#e6c357;--anatomy-shade-2:#eecd64;--anatomy-shade-3:#f4d675;--anatomy-lit-top:#fff1bf;--anatomy-lit-shade:#f6da7a;--anatomy-hi:#5e4709;--anatomy-mid:#8e6f17;--anatomy-lo:#b8952e;--anatomy-faint:#d6b44a;--anatomy-dot:#5e4709;--anatomy-lit:#3d2d03}
+.iso[data-theme="dark"] [data-name^="butter"]{--anatomy-paper:#3a2f0c;--anatomy-face:#4a3c10;--anatomy-top:#5c4a14;--anatomy-shade-0:#2c240a;--anatomy-shade-1:#342a0b;--anatomy-shade-2:#3e320d;--anatomy-shade-3:#483a0f;--anatomy-lit-top:#6e5918;--anatomy-lit-shade:#54440f;--anatomy-hi:#f3d36a;--anatomy-mid:#a88a2c;--anatomy-lo:#6f5a1c;--anatomy-faint:#544414;--anatomy-dot:#f3d36a;--anatomy-lit:#fff2c2}
+
+.iso-live [data-name^="butter"]{--tn-0:var(--anatomy-shade-0);--tn-1:var(--anatomy-shade-1);--tn-2:var(--anatomy-shade-2);--tn-3:var(--anatomy-shade-3);--tn-4:var(--anatomy-top)}
+.iso-live [data-name^="butter"][data-lit]{--tn-0:var(--anatomy-lit-shade);--tn-1:var(--anatomy-lit-shade);--tn-2:var(--anatomy-lit-shade);--tn-3:var(--anatomy-lit-shade);--tn-4:var(--anatomy-lit-top)}
+
+/* a picked part draws its outline in the accent ink */
+.iso[data-theme] .iso-live [data-lit]{--anatomy-hi:var(--anatomy-lit);--anatomy-mid:var(--anatomy-lit)}
+
+/* the glint on the eye's glass is paper-white in both themes */
+[data-name="eye.glass"] .iso-dots circle{fill:#f4f7fa}
+
+.br-controls{display:flex;gap:8px;justify-content:center;margin:2px 0 4px}
+.br-btn{font:12px/1 var(--anatomy-mono);letter-spacing:.02em;color:var(--anatomy-strong);background:transparent;border:1px solid var(--anatomy-faint);border-radius:6px;padding:7px 11px;cursor:pointer}
+.br-btn:hover,.br-btn:focus-visible{border-color:var(--anatomy-muted);outline:none}
+.br-parts{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 10px}
+.br-part{font:12px/1.4 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--anatomy-text);background:none;border:0;padding:2px 0;cursor:pointer;display:inline-flex;gap:6px;align-items:baseline}
+.br-part:hover,.br-part:focus-visible,.br-part[data-on]{color:var(--anatomy-strong);outline:none}
+.br-num{font:11px/1 var(--anatomy-mono);color:var(--anatomy-muted)}
+.br-part[data-on] .br-num{color:var(--anatomy-strong)}
+
+/* what is said: a subtitle over the empty sky above the robot */
+.br-stage{position:relative}
+.br-line{position:absolute;left:50%;top:7%;transform:translateX(-50%);margin:0;display:flex;flex-direction:column;align-items:center;gap:5px;opacity:0;pointer-events:none;text-align:center;white-space:nowrap}
+.br-who{font:10px/1 var(--anatomy-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--anatomy-muted)}
+.br-text{font:700 clamp(15px,3.1vw,22px)/1.1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--anatomy-strong)}
+.br-line[data-who="robot"] .br-text{font-family:var(--anatomy-mono);font-weight:600;letter-spacing:.08em}
+
+/* phones: the robot is the subject, so the stage zooms in a little and the card crops the table's ends */
+@media (max-width:520px){.iso-plate{overflow:hidden}.br-stage{transform:scale(1.16);transform-origin:50% 58%;margin:10px 0 14px}}
+
+/* ---- light ---- */
+.br-gl{display:block}
+.iso[data-theme="dark"] .br-gl{mix-blend-mode:screen}
+.br-stage{cursor:grab}
+.br-stage[data-drag]{cursor:grabbing}
+/* glows drawn with their parts: the eye (cyan), the status LED (green), the power pulse (amber) */
+.br-eye{--g:#1ea7d8;--g-pale:#e6f8ff;opacity:var(--br-eye,0)}
+.br-led{--g:#1fae5c;--g-pale:#eafff2;opacity:var(--br-led,0)}
+.iso[data-theme="dark"] .br-eye{--g:#62dcff;--g-pale:#f2fcff}
+.iso[data-theme="dark"] .br-led{--g:#5cf0a0;--g-pale:#f2fff7}
+.br-glow-halo{fill:var(--g);opacity:.16}
+.br-glow-body{fill:var(--g);opacity:.62}
+.br-glow-core{fill:var(--g-pale)}
+.br-pulse{fill:#f08a00;opacity:0}
+.iso[data-theme="dark"] .br-pulse{fill:#ffc24a}
+/* steam without WebGL: faint wisps that drift; gone once the shader runs */
+.br-wisp{fill:none;stroke:var(--anatomy-faint);stroke-width:1.1;stroke-linecap:round;opacity:.0;animation:br-wisp 3.6s ease-in-out infinite;animation-delay:calc(var(--i) * -1.2s)}
+@keyframes br-wisp{0%{opacity:0;transform:translateY(4px)}35%{opacity:.85}100%{opacity:0;transform:translateY(-10px)}}
+.br-stage[data-gl] .br-wisps{display:none}
+@media (prefers-reduced-motion:reduce){.br-wisp{animation:none;opacity:.6}}
+/* words that land one at a time */
+.br-word{display:inline-block;opacity:0;transform-origin:50% 80%}
