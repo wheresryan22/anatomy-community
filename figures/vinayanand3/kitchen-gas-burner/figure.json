@@ -1,0 +1,32 @@
+{
+  "id": "kitchen-gas-burner",
+  "title": "Inside a Kitchen Gas Burner",
+  "author": "vinayanand3",
+  "prompt": "Use the Anatomy skill to create an illustration of how a common kitchen gas stove works: from ignition, to gas flow into the burner, and then how it burns. Match the reference figure's two views (a labeled SECTION cut with flow inside, and an ORTHO isometric rig), with stage settings, a live readout and an inset instrument, in light and dark. Then make the knob the main control: drag the knob and show, in plain words, what happens at each step as you turn it.",
+  "kind": "SVG + WebGL",
+  "agent": "Other",
+  "model": "Claude Opus 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/gas-burner.html",
+    "dark": "src/gas-burner-dark.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "gas-burner",
+    "combustion",
+    "venturi",
+    "ignition",
+    "kitchen",
+    "valve"
+  ],
+  "created": "2026-10-15"
+}
