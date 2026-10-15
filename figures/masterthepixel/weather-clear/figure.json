@@ -1,0 +1,32 @@
+{
+  "id": "weather-clear",
+  "title": "Weather: Clear, sunshine recorder: glass ball burning a card under a lamp on a p",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Clear\", drawn as a real object (sunshine recorder: glass ball burning a card under a lamp on a protractor arch) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/clear.html",
+    "light": "src/clear-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "clear"
+  ],
+  "created": "2026-10-14"
+}
