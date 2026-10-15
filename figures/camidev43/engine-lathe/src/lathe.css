@@ -1,0 +1,7 @@
+.lt-stage { position: relative; outline: none; }
+.lt-stage:focus-visible { box-shadow: 0 0 0 1px var(--anatomy-mid); border-radius: 6px; }
+.lt-stage svg { display: block; width: 100%; height: auto; }
+.lt-chip { fill: var(--anatomy-lit-top); stroke: var(--anatomy-lit); stroke-width: 0.5; stroke-linejoin: round; }
+.lt-glass { fill: var(--anatomy-top); stroke: none; }
+.lt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.lt-chip-old { fill: var(--anatomy-top); stroke: var(--anatomy-mid); stroke-width: 0.45; stroke-linejoin: round; }
