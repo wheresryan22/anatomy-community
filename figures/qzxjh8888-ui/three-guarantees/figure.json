@@ -1,0 +1,29 @@
+{
+  "id": "three-guarantees",
+  "title": "Three Guarantees Monitor",
+  "author": "qzxjh8888-ui",
+  "prompt": "Make an isometric Anatomy figure explaining three guarantees: a model chain, data sources, and messaging channels. Three parallel rails with stepped blocks, a carriage sweeping every 2 hours as the watchdog, three independent dials, two alarm lamps (WeChat/Bark) driven by a trip lever and a wire.",
+  "kind": "SVG",
+  "agent": "Other",
+  "model": "deepseek-flash",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/three-guarantees.html",
+    "light": "src/three-guarantees-light.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "created": "2026-10-15"
+}
