@@ -1,0 +1,37 @@
+{
+  "id": "engine-lathe",
+  "title": "Engine lathe, turning a bar",
+  "author": "camidev43",
+  "prompt": "/anatomy make a figure for the Anatomy community gallery: a machine lathe. Pick the kind that fits the skill best and explain in detail how it works and its parts, with real, realistic values.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "minutes": 75,
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/engine-lathe-light.html",
+    "dark": "src/engine-lathe.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "lathe",
+    "machining",
+    "turning",
+    "machine-tool",
+    "mechanism"
+  ],
+  "created": "2026-10-15"
+}
