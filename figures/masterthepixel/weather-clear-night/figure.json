@@ -1,0 +1,32 @@
+{
+  "id": "weather-clear-night",
+  "title": "Weather: Clear night, lunar globe in a gimbal in front of a pin-field star board",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Clear night\", drawn as a real object (lunar globe in a gimbal in front of a pin-field star board) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/clear-night.html",
+    "light": "src/clear-night-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "clear-night"
+  ],
+  "created": "2026-10-14"
+}
