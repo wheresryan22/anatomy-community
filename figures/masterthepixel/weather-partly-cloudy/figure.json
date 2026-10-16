@@ -1,0 +1,32 @@
+{
+  "id": "weather-partly-cloudy",
+  "title": "Weather: Partly cloudy, sunshine recorder with a sliding cloud-gate shade in fro",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Partly cloudy\", drawn as a real object (sunshine recorder with a sliding cloud-gate shade in front of the lamp) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/partly-cloudy.html",
+    "light": "src/partly-cloudy-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "partly-cloudy"
+  ],
+  "created": "2026-10-14"
+}
