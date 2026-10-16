@@ -1,0 +1,38 @@
+{
+  "id": "computer-cpu-alu",
+  "title": "From computer to ALU",
+  "author": "zintaen",
+  "prompt": "Build a three-level recursive zoom cutaway from a desktop computer logic board into its ceramic PGA CPU package and silicon die, and down to the 4-bit ripple-carry ALU gate array, driven upward by a shared full-adder model.",
+  "kind": "SVG",
+  "agent": "Antigravity",
+  "model": "Gemini",
+  "minutes": 25,
+  "tokens": 120000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/computer-cpu-alu-light.html",
+    "dark": "src/computer-cpu-alu.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "hardware",
+    "cpu",
+    "alu",
+    "architecture",
+    "recursive-zoom"
+  ],
+  "created": "2026-10-16"
+}
