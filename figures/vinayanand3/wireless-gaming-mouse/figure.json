@@ -1,0 +1,36 @@
+{
+  "id": "wireless-gaming-mouse",
+  "title": "Inside a wireless gaming mouse",
+  "author": "vinayanand3",
+  "prompt": "Wireless gaming mouse: engineering anatomy and cinematic motion reveal. A fictional, technically plausible 125 x 65 x 40 mm lightweight esports mouse built from 100-150 individual parts in assemblies A-H (shell and ergonomics, optical click switches, scroll wheel and encoder, optical sensor, main PCB, 2.4 GHz wireless, Li-Po battery and power, base and PTFE feet), with an interactive anatomy page: rotate, zoom, explode slider, select parts, highlight assemblies, button click, wheel spin, optical tracking, wireless and power-flow toggles.",
+  "kind": "SVG + 3D",
+  "agent": "Claude Code",
+  "model": "Claude Opus 5.5",
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/figure-light.html",
+    "dark": "src/figure.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "mouse",
+    "gaming",
+    "electronics",
+    "optical-sensor",
+    "wireless",
+    "exploded-view"
+  ],
+  "created": "2026-10-16"
+}
