@@ -1,0 +1,32 @@
+{
+  "id": "weather-dust-haze",
+  "title": "Weather: Dust and haze, filter-pack air sampler: dust-stained filter cassette, p",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Dust and haze\", drawn as a real object (filter-pack air sampler: dust-stained filter cassette, pump with rotameter and load bar, cascade impactor) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/dust-haze.html",
+    "light": "src/dust-haze-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "dust-haze"
+  ],
+  "created": "2026-10-14"
+}
