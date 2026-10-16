@@ -1,0 +1,38 @@
+{
+  "id": "deadweight-tester",
+  "title": "Deadweight pressure tester",
+  "author": "zintaen",
+  "prompt": "Explain how a hydraulic deadweight pressure tester calibrates a Bourdon reference gauge using a handwheel screw press, oil manifold, and floating calibrated mass stack.",
+  "kind": "SVG",
+  "agent": "Antigravity",
+  "model": "Claude Opus 4.6",
+  "minutes": 34,
+  "tokens": 342800,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/deadweight-tester-light.html",
+    "dark": "src/deadweight-tester.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "calibration",
+    "hydraulics",
+    "pressure",
+    "gauge",
+    "measurement"
+  ],
+  "created": "2026-10-16"
+}
