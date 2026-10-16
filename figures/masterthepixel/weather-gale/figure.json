@@ -1,0 +1,32 @@
+{
+  "id": "weather-gale",
+  "title": "Weather: Gale, cup anemometer on a bent, guyed mast in a gale: rotor racing, str",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Gale\", drawn as a real object (cup anemometer on a bent, guyed mast in a gale: rotor racing, streamer straight out, debris flying) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/gale.html",
+    "light": "src/gale-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "gale"
+  ],
+  "created": "2026-10-16"
+}
