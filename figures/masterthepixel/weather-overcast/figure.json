@@ -1,0 +1,32 @@
+{
+  "id": "weather-overcast",
+  "title": "Weather: Overcast, felt-baffle diffusion rig: a dim lamp shining through driftin",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Overcast\", drawn as a real object (felt-baffle diffusion rig: a dim lamp shining through drifting stratus layers onto a light meter) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/overcast.html",
+    "light": "src/overcast-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "overcast"
+  ],
+  "created": "2026-10-14"
+}
