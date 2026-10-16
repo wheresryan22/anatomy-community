@@ -1,0 +1,32 @@
+{
+  "id": "tm-t20",
+  "title": "TM-T20: impressora térmica",
+  "author": "feliperequiasoares",
+  "prompt": "você conseguiria replicar uma tm-t20 preta usando anatomy? · com o logo TM-T20 e sem prato giratório · antes de publicar, cria uma versão blueprint e dark também · e adiciona interações: segurar o botão FEED avança papel e a guilhotina corta; o rolo diminui a cada cupom e, quando acaba, o LED PAPER acende e a impressão para até trocar o rolo; a chave liga/desliga na lateral",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ]
+  ],
+  "pages": {
+    "light": "src/tm-t20.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "printer",
+    "thermal",
+    "receipt",
+    "hinge",
+    "mechanism",
+    "cutter"
+  ],
+  "created": "2026-10-16"
+}
