@@ -1,0 +1,38 @@
+{
+  "id": "ct-scanner",
+  "title": "Inside a CT scanner \u2014 rotate, explode and reconstruct",
+  "author": "danrudy33",
+  "prompt": "Create a colourful educational third-generation CT scanner with white covers, drag-to-orbit, staged exploded components labelled directly in the image, and genuine computed axial fan-beam reconstruction. Demonstrate helical table motion separately; do not claim helical reconstruction. Disclose schematic geometry and visual limitations.",
+  "kind": "SVG + 3D",
+  "agent": "Other",
+  "model": "GPT-6.1 Sol; initial Claude Opus 5.5",
+  "skill": {
+    "kit": "sha256:6a7a98669b0f0aba6c537ca3094326473a2f4635faa4cdf7ce75f313f6c6fd46",
+    "commit": "dbf697a527bbf7d358668e1557cb1e35ff725d46"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/ct-scanner-light.html",
+    "dark": "src/ct-scanner.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "medical-imaging",
+    "ct",
+    "education",
+    "tomography",
+    "teardown",
+    "mechanism"
+  ],
+  "created": "2026-10-14"
+}
