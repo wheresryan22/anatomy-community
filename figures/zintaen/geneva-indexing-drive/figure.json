@@ -1,0 +1,38 @@
+{
+  "id": "geneva-indexing-drive",
+  "title": "Geneva indexing drive",
+  "author": "zintaen",
+  "prompt": "Build an interactive 3D four-station Geneva intermittent indexing drive with a continuously rotating drive crank, brass roller pin, four-station work-holding turret, and hinged detent pawl, verified across all 360 degrees with turn-audit and turn-check.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Gemini",
+  "minutes": 20,
+  "tokens": 95000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/geneva-indexing-drive-light.html",
+    "dark": "src/geneva-indexing-drive.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "mechanics",
+    "geneva-drive",
+    "kinematics",
+    "indexing"
+  ],
+  "created": "2026-10-16"
+}
