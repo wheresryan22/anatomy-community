@@ -1,0 +1,36 @@
+{
+  "id": "roadster-cold-gas-thruster",
+  "title": "Roadster cold-gas thruster bench",
+  "author": "Nanatsume",
+  "prompt": "explain how a tesla roadster rocket works",
+  "kind": "SVG + WebGL",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "minutes": 75,
+  "tokens": 430278,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/roadster-thruster-light.html",
+    "dark": "src/roadster-thruster.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "rocket",
+    "physics",
+    "webgl"
+  ],
+  "created": "2026-10-18"
+}

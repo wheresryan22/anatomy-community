@@ -1,0 +1,20 @@
+.rt-stage { position: relative; touch-action: pan-y; cursor: pointer; outline: none; -webkit-user-select: none; user-select: none; }
+.rt-stage > svg, .rt-stage > canvas { display: block; width: 100%; height: auto; }
+.rt-stage > .rt-plume { position: absolute; inset: 0; height: 100% !important; pointer-events: none; }
+.iso:not([data-theme="light"]) .rt-plume { mix-blend-mode: screen; }
+.rt-stage:focus-visible { box-shadow: 0 0 0 1px var(--anatomy-mid); }
+.rt-void { fill: var(--rt-void); stroke: none; }
+.rt-led { fill: var(--anatomy-lo); stroke: none; transition: fill 0.12s ease; }
+.rt-stage[data-firing] .rt-led { fill: var(--anatomy-lit); }
+.iso { --rt-void: #070707; }
+.iso[data-theme="light"] { --rt-void: #8f8f8a; }
+.rt-fog { opacity: 0; pointer-events: none; }
+.iso { --rt-fog: #cfd8e3; }
+.iso[data-theme="light"] .rt-fog { --rt-fog: #c5ccd3; mix-blend-mode: multiply; }
+.rt-stage[data-gl] .rt-fog { display: none; }
+.iso-figure[lang="th"] .iso-plate-corner { letter-spacing: 0; }
+.rt-lang { display: inline-flex; justify-self: start; border: 1px solid var(--anatomy-lo); }
+.rt-lang button { font: 11px/1 var(--anatomy-mono); letter-spacing: .04em; color: var(--anatomy-muted); background: none; border: 0; padding: 6px 10px; cursor: pointer; }
+.rt-lang button + button { border-left: 1px solid var(--anatomy-lo); }
+.rt-lang button[aria-pressed="true"] { color: var(--anatomy-strong); background: var(--anatomy-face); }
+.rt-lang button:focus-visible { outline: 1px solid var(--anatomy-mid); outline-offset: -1px; }
