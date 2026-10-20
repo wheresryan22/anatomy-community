@@ -1,0 +1,38 @@
+{
+  "id": "outside-micrometer",
+  "title": "Bench screw micrometer",
+  "author": "zintaen",
+  "prompt": "Explain how a precision bench screw micrometer converts rotation of a 50-division knurled thimble on a 0.50 mm pitch lead screw into 0.01 mm axial spindle travel between a lapped carbide anvil and a geared revolution counter dial.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Claude Opus 4.6",
+  "minutes": 34,
+  "tokens": 295000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/outside-micrometer-light.html",
+    "dark": "src/outside-micrometer.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "metrology",
+    "micrometer",
+    "calibration",
+    "mechanism",
+    "engineering"
+  ],
+  "created": "2026-10-20"
+}
