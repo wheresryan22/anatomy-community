@@ -1,0 +1,78 @@
+.iso{--tls-glass:#1f2527;--tls-screen:#d7f1e6;--tls-screen-dim:#8fb3a6;--tls-good:#5bd897;--tls-bad:#ff8b80;--tls-amber:#d98a1c;--tls-pit:#c9c9c5;--tls-scan:#0f9d9a;--tls-bezel:var(--anatomy-shade-1)}
+.iso[data-theme="dark"]{--tls-glass:#0b0e0f;--tls-pit:#0c0c0c;--tls-amber:#f0a640;--tls-scan:#3fe0d6}
+.tls-stage{position:relative;cursor:pointer;outline:none;touch-action:pan-y;-webkit-tap-highlight-color:transparent}
+.tls-stage:focus-visible{box-shadow:inset 0 0 0 1px var(--anatomy-faint)}
+.tls-scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.tls-stage>svg,.tls-stage>canvas{display:block;width:100%;height:auto}
+.tls-stage>.tls-layer{position:absolute;inset:0;height:100%!important;pointer-events:none}
+.iso:not([data-theme="light"]) .tls-gl{mix-blend-mode:screen}
+.tls-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tls-glass{fill:var(--tls-glass)}
+.tls-bezel{fill:var(--tls-bezel)}
+.tls-scan{fill:none;stroke:#ffffff;stroke-opacity:.035;stroke-width:.35}
+.tls-bar{fill:#ffffff;fill-opacity:.07}
+.tls-text,.tls-dim,.tls-good,.tls-bad{font-family:var(--anatomy-mono);letter-spacing:.02em}
+.tls-text{fill:var(--tls-screen)}
+.tls-dim{fill:var(--tls-screen-dim)}
+.tls-good{fill:var(--tls-good)}
+.tls-bad{fill:var(--tls-bad)}
+.tls-ink{fill:var(--tls-screen)}
+.tls-ink-line{fill:none;stroke:var(--tls-screen);stroke-width:.5;vector-effect:none}
+.tls-page{display:none}
+.tls-page[data-on]{display:inline}
+.tls-socket{fill:var(--tls-pit);stroke:var(--anatomy-mid);stroke-width:var(--anatomy-weight);stroke-linejoin:round}
+.tls-pit{fill:var(--tls-pit)}
+.tls-hl{fill:none;stroke:var(--anatomy-green);stroke-width:1.5;stroke-linejoin:round}
+.tls-hl[data-bad]{stroke:var(--anatomy-red)}
+.iso-svg .tls-pulse{fill:none;stroke:var(--tls-amber);stroke-width:1.5;stroke-linecap:round;vector-effect:none}
+.tls-led-off{fill:var(--anatomy-shade-0);stroke:var(--anatomy-lo);stroke-width:.3;vector-effect:none}
+.tls-led-ring{fill:var(--anatomy-paper);stroke:var(--anatomy-lo);stroke-width:.35;vector-effect:none}
+.tls-led-amber{fill:var(--tls-amber)}
+.tls-led-green{fill:var(--anatomy-green)}
+.tls-led-red{fill:var(--anatomy-red)}
+.tls-led-on{fill:var(--anatomy-green);opacity:.75}
+.tls-port{fill:var(--tls-pit)}
+.tls-screw{fill:none;stroke:var(--anatomy-lo);stroke-width:.35;vector-effect:none}
+.tls-lamp-g{fill:var(--anatomy-green)}
+.tls-lamp-r{fill:var(--anatomy-red)}
+.tls-scanwin{fill:var(--tls-scan)}
+.tls-mal{opacity:0;transition:opacity .45s}
+.tls-mal circle{fill:var(--anatomy-red);opacity:1!important}
+.tls-stage[data-mal] .tls-mal{opacity:1}
+/* controls and step list */
+.tls-legend{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:14px;color:var(--anatomy-muted);font-size:13px;line-height:1.5}
+.tls-legend span{display:inline-flex;align-items:center;gap:8px}
+.tls-ico{width:16px;height:10px;flex:none;overflow:visible}
+.tls-ico circle,.tls-ico rect,.tls-ico path{fill:none;stroke:var(--anatomy-hi);stroke-width:1.1}
+.tls-ico-lit rect{stroke:var(--anatomy-lit);fill:var(--anatomy-face)}
+.tls-controls{display:flex;gap:8px}
+.tls-controls button{font:inherit;font-size:13px;min-width:38px;height:32px;padding:0 10px;border:0;border-radius:6px;background:var(--anatomy-card);color:var(--anatomy-strong);box-shadow:var(--anatomy-lift);cursor:pointer}
+.tls-controls button:hover{color:var(--anatomy-lit)}
+.tls-controls button:focus-visible{outline:2px solid var(--anatomy-mid);outline-offset:2px}
+.tls-toggle{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.35;color:var(--anatomy-text);cursor:pointer;user-select:none}
+.tls-toggle input{accent-color:var(--anatomy-hi);width:15px;height:15px;margin:0}
+.tls-toggle kbd{font-family:var(--anatomy-mono);font-size:10.5px;color:var(--anatomy-muted);border:1px solid var(--anatomy-faint);border-radius:4px;padding:0 4px}
+.tls-steps{position:relative;list-style:none;margin:0;padding:0 4px 0 0;display:flex;flex-direction:column;gap:2px;counter-reset:step;overflow-y:auto;min-height:0;flex:1 1 auto;scrollbar-width:thin}
+.tls-steps li{counter-increment:step;display:grid;grid-template-columns:26px 1fr;gap:2px 6px;padding:7px 8px;border-radius:6px;font-size:13px;line-height:1.45;color:var(--anatomy-muted);cursor:pointer;transition:background .25s,color .25s}
+.tls-steps li::before{content:counter(step,decimal-leading-zero);font-family:var(--anatomy-mono);font-size:11px;padding-top:2px;color:var(--anatomy-lo)}
+.tls-steps li b{font-weight:600;color:var(--anatomy-text)}
+.tls-steps li span{grid-column:2;display:none}
+.tls-steps li[data-on] span{display:block;margin-top:2px}
+.tls-steps li[data-on]{background:var(--anatomy-card);box-shadow:var(--anatomy-lift);color:var(--anatomy-text)}
+.tls-steps li[data-on]::before{color:var(--anatomy-hi)}
+.tls-steps li[data-on] b{color:var(--anatomy-strong)}
+.tls-steps li[data-done]::before{color:var(--anatomy-mid)}
+@media (max-width:760px){.tls-stage{width:760px;touch-action:pan-x pan-y}}
+
+.iso-page{margin-top:24px!important;margin-bottom:40px!important}
+.tls-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
+.tls-main .iso-figure{margin:0}
+.tls-side{position:sticky;top:16px;max-height:calc(100vh - 32px);display:flex;flex-direction:column;gap:14px;padding:18px 16px;background:var(--anatomy-card);box-shadow:0 0 0 1px var(--anatomy-faint)}
+.tls-side-head{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--anatomy-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--anatomy-muted)}
+.tls-side-count{color:var(--anatomy-text);letter-spacing:.04em}
+.tls-controls button{flex:1}
+.tls-switches{display:flex;flex-direction:column;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--anatomy-faint)}
+.tls-steps li{padding:6px 8px}
+.tls-steps li[data-on]{padding:10px 10px 12px}
+.tls-steps li[data-on] span{color:var(--anatomy-text);font-size:13.5px;line-height:1.55}
+@media (max-width:1100px){.tls-layout{grid-template-columns:1fr}.tls-side{position:static;max-height:none}.tls-steps{overflow:visible}}
