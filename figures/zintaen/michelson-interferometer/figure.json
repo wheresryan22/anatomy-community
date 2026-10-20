@@ -1,0 +1,39 @@
+{
+  "id": "michelson-interferometer",
+  "title": "Michelson interferometer",
+  "author": "zintaen",
+  "prompt": "Explain how a Michelson interferometer splits a coherent He-Ne laser beam across a fixed reference arm and a micrometer-driven delay arm, recombining the wavefronts into circular Haidinger interference fringes that shift by one full ring per half-wavelength of mirror travel.",
+  "kind": "SVG + WebGL",
+  "agent": "Antigravity",
+  "model": "Claude Opus 4.6",
+  "minutes": 32,
+  "tokens": 285000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/michelson-interferometer-light.html",
+    "dark": "src/michelson-interferometer.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "optics",
+    "interferometer",
+    "laser",
+    "physics",
+    "metrology",
+    "waves"
+  ],
+  "created": "2026-10-20"
+}
