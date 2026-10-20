@@ -1,0 +1,38 @@
+{
+  "id": "ssd-nand-floating-gate",
+  "title": "From NVMe SSD to floating-gate cell",
+  "author": "zintaen",
+  "prompt": "Build a three-level recursive cutaway zooming from an M.2 NVMe solid-state drive PCB into its 3D NAND flash package and down to a 4-cell floating-gate MOSFET string with Fowler–Nordheim tunneling program, erase, and read states.",
+  "kind": "SVG",
+  "agent": "Antigravity",
+  "model": "Gemini",
+  "minutes": 25,
+  "tokens": 110000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/ssd-nand-floating-gate-light.html",
+    "dark": "src/ssd-nand-floating-gate.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "storage",
+    "semiconductors",
+    "computer-architecture",
+    "cutaway"
+  ],
+  "created": "2026-10-20"
+}
