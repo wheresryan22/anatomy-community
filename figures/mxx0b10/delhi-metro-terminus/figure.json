@@ -1,0 +1,35 @@
+{
+  "id": "delhi-metro-terminus",
+  "title": "Delhi Metro Magenta Line terminus",
+  "author": "Mxx0b10",
+  "prompt": "Make the interaction more interesting and the Delhi Metro model cooler.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/delhi-metro-light.html",
+    "dark": "src/delhi-metro.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "metro",
+    "railway",
+    "transport",
+    "interactive",
+    "game"
+  ],
+  "created": "2026-10-19"
+}
