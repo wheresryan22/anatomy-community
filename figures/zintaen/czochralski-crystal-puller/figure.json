@@ -1,0 +1,38 @@
+{
+  "id": "czochralski-crystal-puller",
+  "title": "Czochralski silicon crystal puller",
+  "author": "zintaen",
+  "prompt": "Build an interactive 3D and WebGL Czochralski single-crystal silicon puller with an RF-heated quartz crucible, a live WebGL thermal-convection melt pool and glowing solidification meniscus, a cantilevered seed pullhead lifting a monocrystalline silicon boule, and a coupled pull-rate control dial.",
+  "kind": "SVG + WebGL",
+  "agent": "Antigravity",
+  "model": "Gemini",
+  "minutes": 20,
+  "tokens": 90000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/czochralski-crystal-puller-light.html",
+    "dark": "src/czochralski-crystal-puller.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "webgl",
+    "3d",
+    "semiconductors",
+    "crystallography",
+    "materials-science"
+  ],
+  "created": "2026-10-20"
+}
