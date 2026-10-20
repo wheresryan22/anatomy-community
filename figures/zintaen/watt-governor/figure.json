@@ -1,0 +1,38 @@
+{
+  "id": "watt-governor",
+  "title": "Centrifugal flyball governor",
+  "author": "zintaen",
+  "prompt": "Build an interactive 3D Watt centrifugal flyball governor with a rotating vertical spindle and twin brass flyweights, a rising collar sleeve, and a coupled steam throttle butterfly valve gauge, verified across all 1440 degrees with turn-audit and turn-check.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Gemini",
+  "minutes": 20,
+  "tokens": 90000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/watt-governor-light.html",
+    "dark": "src/watt-governor.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "mechanics",
+    "control-systems",
+    "governor",
+    "kinematics"
+  ],
+  "created": "2026-10-20"
+}
