@@ -1,0 +1,38 @@
+{
+  "id": "scotch-yoke",
+  "title": "Scotch yoke harmonic actuator",
+  "author": "zintaen",
+  "prompt": "Build an interactive 3D Scotch yoke harmonic actuator with a continuously rotating eccentric crank wheel and brass crankpin, a reciprocating slotted yoke carriage, and a coupled harmonic phase indicator dial, verified across all 1440 degrees with turn-audit and turn-check.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Gemini",
+  "minutes": 20,
+  "tokens": 90000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/scotch-yoke-light.html",
+    "dark": "src/scotch-yoke.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "mechanics",
+    "scotch-yoke",
+    "kinematics",
+    "harmonic-motion"
+  ],
+  "created": "2026-10-20"
+}
