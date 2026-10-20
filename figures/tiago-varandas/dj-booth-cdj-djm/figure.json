@@ -1,0 +1,34 @@
+{
+  "id": "dj-booth-cdj-djm",
+  "title": "Anatomy of a DJ booth · CDJ-3000X × DJM-A9",
+  "author": "tiago-varandas",
+  "prompt": "Build an interactive anatomy of a DJ booth featuring two CDJ-3000X players and one DJM-A9 4-channel mixer: an exploded, labeled technical diagram that is also playable. Every control creates or changes music in real time (original synthesized tracks, 124 BPM, A minor), while numbered callouts explain each part and pulses along the cables show the signal flow.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "minutes": 220,
+  "tokens": 700083,
+  "skill": {
+    "kit": "sha256:b2fbd67ae3c704977587339387fd68594824ef016e58a3db1339d5b2e0661081"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ]
+  ],
+  "pages": {
+    "light": "src/dj-booth.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "music",
+    "audio",
+    "dj",
+    "mixer",
+    "interactive"
+  ],
+  "created": "2026-10-14"
+}
