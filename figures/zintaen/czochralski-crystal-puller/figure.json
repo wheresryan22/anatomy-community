@@ -5,7 +5,7 @@
   "prompt": "Build an interactive 3D and WebGL Czochralski single-crystal silicon puller with an RF-heated quartz crucible, a live WebGL thermal-convection melt pool and glowing solidification meniscus, a cantilevered seed pullhead lifting a monocrystalline silicon boule, and a coupled pull-rate control dial.",
   "kind": "SVG + WebGL",
   "agent": "Antigravity",
-  "model": "Gemini",
+  "model": "Gemini 3.1 Pro",
   "minutes": 20,
   "tokens": 90000,
   "skill": {
@@ -29,7 +29,7 @@
   "license": "MIT",
   "tags": [
     "webgl",
-    "3d",
+    "crystal-growth",
     "semiconductors",
     "crystallography",
     "materials-science"

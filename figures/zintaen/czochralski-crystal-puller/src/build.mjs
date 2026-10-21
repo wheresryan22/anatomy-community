@@ -2,7 +2,6 @@ import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as k from "../../../../.skill/kit/iso-kit.mjs";
-import * as G from "../../../../.skill/kit/lathe.mjs";
 import * as A from "../../../../.skill/kit/audit.mjs";
 import { glCamera } from "../../../../.skill/kit/gl.mjs";
 import { TURN } from "../../../../.skill/kit/turn.mjs";
@@ -28,8 +27,8 @@ const MELT_R = 19.4;
 const Z_MELT = 13.5;
 
 const COL_BASE = { x: -68, y: -2, w: 22, d: 24, r: 2.2 };
-const COL_BODY = { x: -65, y: 1, w: 16, d: 18, r: 1.8 };
-const ARM_PLAN = { x: -65, y: 3, w: 67, d: 14, r: 2.0 };
+const COL_BODY = { x: -66, y: 1, w: 16, d: 18, r: 1.8 };
+const ARM_PLAN = { x: -50, y: 3, w: 52, d: 14, r: 2.0 };
 
 const RF_BASE = { x: 20, y: -44, w: 44, d: 24, r: 2.2 };
 const RF_BODY = { x: 23, y: -41, w: 38, d: 18, r: 1.8 };
@@ -122,13 +121,21 @@ put({
 
 const crucTicks = k.radialTicks(CRUC[0], CRUC[1], CRUC_WALL_R - 0.8, 24, 6, Z_MELT, [1.0, 1.9], P);
 const rfArcs = [5.4, 7.2, 9.0, 10.8].map((z) => k.sideArc(CRUC[0], CRUC[1], CRUC_WALL_R, z, P, 36)).join("");
+const crucMarkInit = k.lineOnTop(
+  [CRUC[0] + (MELT_R + 0.4), CRUC[1]],
+  [CRUC[0] + (CRUC_WALL_R - 0.6), CRUC[1]],
+  Z_MELT,
+  P,
+);
 const crucSvg =
   S(k.cylinder(CRUC[0], CRUC[1], CRUC_BASE_R, 0, 3.8, P, 48, 0.45), { tone: "lo" }) +
   S(k.cylinder(CRUC[0], CRUC[1], CRUC_WALL_R, 3.8, Z_MELT - 3.8, P, 48, 0.45), { tone: "mid", crease: "lo" }) +
   L(rfArcs, { tone: "lit" }) +
+  L(k.ring(CRUC[0], CRUC[1], CRUC_WALL_R - 1.6, Z_MELT, P, 48), { tone: "hi", free: true }) +
   L(k.ring(CRUC[0], CRUC[1], MELT_R, Z_MELT, P, 48), { tone: "lo" }) +
   L(crucTicks.minor, { tone: "faint", free: true }) +
-  L(crucTicks.major, { tone: "lo", free: true });
+  L(crucTicks.major, { tone: "lo", free: true }) +
+  `<path data-part="cruc-mark" data-free="" class="iso-line iso-line--lit" d="${crucMarkInit}"/>`;
 
 put({
   name: "crucible.well",
@@ -169,14 +176,14 @@ put({
 
 const colSvg =
   S(k.slabOf(COL_BASE, 0, 4.5, P, 6, 0.45), { tone: "lo" }) +
-  S(k.slabOf(COL_BODY, 4.5, 33.5, P, 6, 0.45), {
+  S(k.slabOf(COL_BODY, 4.5, 40.0, P, 6, 0.45), {
     tone: "mid",
     crease: "lo",
-    inner: L(k.sideSeam(COL_BODY, 12.0, P, 6) + k.sideSeam(COL_BODY, 28.0, P, 6), { tone: "faint" }),
+    inner: L(k.sideSeam(COL_BODY, 14.0, P, 6) + k.sideSeam(COL_BODY, 30.0, P, 6), { tone: "faint" }),
   }) +
   L(
-    k.segment([COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 6, 6.5], [COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 6, 36.0], P) +
-      k.segment([COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 12, 6.5], [COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 12, 36.0], P),
+    k.segment([COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 6, 6.5], [COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 6, 42.5], P) +
+      k.segment([COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 12, 6.5], [COL_BODY.x + COL_BODY.w - 0.2, COL_BODY.y + 12, 42.5], P),
     { tone: "lo", free: true },
   ) +
   D([at([COL_BASE.x + 4, COL_BASE.y + 4, 4.5]), at([COL_BASE.x + 18, COL_BASE.y + 20, 4.5])], { size: 0.45 });
@@ -184,19 +191,28 @@ const colSvg =
 put({
   name: "gantry.column",
   layer: "front",
-  at: [-57, 10, 20],
+  at: [-58, 10, 22],
   svg: `<g data-mat="steel">${colSvg}</g>`,
   shapes: [
     A.slab(COL_BASE, 0, 4.5),
-    A.slab(COL_BODY, 4.5, 33.5),
+    A.slab(COL_BODY, 4.5, 40.0),
   ],
 });
 
-const bouleStriations = [19.0, 21.2, 23.4, 25.6].map((z) => k.sideArc(CRUC[0], CRUC[1], 7.6, z, P, 32)).join("");
+const BOULE_STEPS = 17;
+const bouleFramesSvg = Array.from({ length: BOULE_STEPS }, (_, idx) => {
+  const vStep = 0.4 + idx * 0.1;
+  const r = Number((9.2 - 1.45 * vStep).toFixed(2));
+  const striations = [19.0, 21.2, 23.4, 25.6].map((z) => k.sideArc(CRUC[0], CRUC[1], r, z, P, 32)).join("");
+  const inner =
+    S(k.cylinder(CRUC[0], CRUC[1], r, 16.8, 10.8, P, 36, 0.45), { tone: "hi", crease: "lo", lit: true }) +
+    L(striations, { tone: "lo" }) +
+    L(k.ring(CRUC[0], CRUC[1], Number((r * 0.74).toFixed(2)), 27.6, P, 28), { tone: "faint", free: true });
+  return `<g data-boule-frame="${idx}"${idx === 7 ? "" : ' style="display:none"'}>${inner}</g>`;
+}).join("");
+
 const bouleSvg =
-  S(k.cylinder(CRUC[0], CRUC[1], 7.6, 16.8, 10.8, P, 36, 0.45), { tone: "hi", crease: "lo", lit: true }) +
-  L(bouleStriations, { tone: "lo" }) +
-  L(k.ring(CRUC[0], CRUC[1], 5.6, 27.6, P, 28), { tone: "faint", free: true }) +
+  bouleFramesSvg +
   S(k.cylinder(CRUC[0], CRUC[1], 5.0, 27.6, 3.0, P, 32, 0.35), { tone: "hi", crease: "lo", lit: true }) +
   S(k.cylinder(CRUC[0], CRUC[1], 2.2, 30.6, 7.4, P, 28, 0.2), { tone: "mid" });
 
@@ -206,13 +222,14 @@ put({
   at: [CRUC[0], CRUC[1], 26],
   svg: `<g data-part="boule" data-mat="steel" data-lit="true">${bouleSvg}</g>`,
   shapes: [
-    A.cylinder(CRUC[0], CRUC[1], 7.6, 16.8, 10.8),
+    A.cylinder(CRUC[0], CRUC[1], 8.62, 16.8, 10.8),
     A.cylinder(CRUC[0], CRUC[1], 5.0, 27.6, 3.0),
     A.cylinder(CRUC[0], CRUC[1], 2.2, 30.6, 7.4),
   ],
 });
 
-const armTicks = k.topTicks(-56, -14, 3, 4, ARM_PLAN.y + ARM_PLAN.d - 3.2, 43.0, [1.2, 2.2], P, "x");
+const armTicks = k.topTicks(-44, -14, 3, 4, ARM_PLAN.y + ARM_PLAN.d - 3.2, 43.0, [1.2, 2.2], P, "x");
+const chuckMarkInit = k.lineOnTop([CRUC[0], CRUC[1]], [CRUC[0] + 4.4, CRUC[1]], 47.8, P);
 const armSvg =
   S(k.slabOf(ARM_PLAN, 38.0, 5.0, P, 6, 0.45), {
     tone: "mid",
@@ -223,7 +240,8 @@ const armSvg =
   L(armTicks.major, { tone: "lo", free: true }) +
   S(k.cylinder(CRUC[0], CRUC[1], 5.6, 43.0, 4.8, P, 32, 0.4), { tone: "hi", crease: "lo", lit: true }) +
   L(k.ring(CRUC[0], CRUC[1], 3.4, 47.8, P, 24), { tone: "lo" }) +
-  D([at([-57, 10, 43.0]), at([CRUC[0], CRUC[1], 47.8])], { size: 0.48 });
+  `<path data-part="chuck-mark" data-free="" class="iso-line iso-line--lit" d="${chuckMarkInit}"/>` +
+  D([at([-44, 10, 43.0]), at([CRUC[0], CRUC[1], 47.8])], { size: 0.48 });
 
 put({
   name: "gantry.arm",
@@ -247,7 +265,7 @@ const dialSvg =
   `<g data-part="knob" data-mat="brass" data-lit="true">` +
   S(k.cylinder(KNOB_POS[0], KNOB_POS[1], 8.2, 7.5, 4.3, P, 36, 0.4), { tone: "hi", crease: "lo", lit: true }) +
   L(k.ring(KNOB_POS[0], KNOB_POS[1], 6.4, 11.8, P, 28), { tone: "lo" }) +
-  L(knobMarker, { tone: "lit", free: true }) +
+  `<path data-part="knob-marker" data-free="" class="iso-line iso-line--lit" d="${knobMarker}"/>` +
   D([at([KNOB_POS[0], KNOB_POS[1], 11.8])], { size: 0.48, tone: "lit" }) +
   `</g>` +
   D([at([DIAL_PED.x + 4, DIAL_PED.y + 4, 7.5]), at([DIAL_PED.x + 24, DIAL_PED.y + 28, 7.5])], { size: 0.42 });
@@ -280,12 +298,12 @@ const BACK = [`<path class="iso-halo" d="${k.haloOf(BASE, -BASE_H - FOOT_H, BASE
 const FRONT = layerOf("front");
 
 const LABEL =
-  "A Czochralski single-crystal silicon puller on an instrument plinth: an RF-heated fused-quartz crucible holds a molten silicon pool at 1420 degrees Celsius with thermal-convection cells and a bright meniscus ring, while a cantilevered seed pullhead lifts a rotating monocrystalline silicon boule coupled to a pull-rate control console.";
+  "A Czochralski single-crystal silicon puller on an instrument plinth: an RF-heated graphite susceptor and fused-quartz crucible liner hold a molten silicon pool at 1420 degrees Celsius with thermal-convection cells and a bright meniscus ring, while a cantilevered seed pullhead lifts a counter-rotating monocrystalline silicon boule coupled to a pull-rate control console.";
 
 const backSvg = k.figureSvg({ width: WIDTH, height: HEIGHT, label: LABEL, body: BACK });
 const frontSvg = `<svg xmlns="http://www.w3.org/2000/svg" class="iso-svg iso-layer" viewBox="0 0 ${WIDTH} ${HEIGHT}" aria-hidden="true">${FRONT.join("")}</svg>`;
 
-const stage = `<div class="iso-stage cz-stage" tabindex="0" role="slider" aria-label="Czochralski silicon crystal puller: drag horizontally or use left and right arrow keys to adjust pull rate v and lift the silicon boule; keys 1 through 4 select canonical growth regimes" aria-valuemin="0.4" aria-valuemax="2.0" aria-valuenow="1.10" aria-valuetext="Pull rate 1.10 mm/min, boule radius 7.6 mm, balanced Voronkov regime">${backSvg}<canvas class="iso-layer cz-gl" aria-hidden="true"></canvas>${frontSvg}</div>`;
+const stage = `<div class="iso-stage cz-stage" tabindex="0" role="slider" aria-label="Czochralski silicon crystal puller: drag horizontally or use left and right arrow keys to adjust pull rate v and grow the silicon boule; keys 1 through 4 select canonical growth regimes" aria-valuemin="0.4" aria-valuemax="2.0" aria-valuenow="1.10" aria-valuetext="Pull rate 1.10 mm/min, meniscus radius 7.6 mm, Voronkov neutral">${backSvg}<canvas class="iso-layer cz-gl" aria-hidden="true"></canvas>${frontSvg}</div>`;
 
 const EXTRA_CSS = `
 ${TURN.materialCss()}
@@ -294,16 +312,21 @@ ${TURN.materialCss()}
 .cz-stage > .iso-layer { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 `;
 
+const isoO = k.iso([0, 0, 0], P);
+const isoUx = [k.iso([1, 0, 0], P)[0] - isoO[0], k.iso([1, 0, 0], P)[1] - isoO[1]];
+const isoUy = [k.iso([0, 1, 0], P)[0] - isoO[0], k.iso([0, 1, 0], P)[1] - isoO[1]];
+
 const GL_CONFIG = {
   view: [WIDTH, HEIGHT],
   camera: glCamera(P),
-  crucPos: CRUC,
-  meltR: MELT_R,
-  zMelt: Z_MELT,
-  knobOrigin: k.iso([KNOB_POS[0], KNOB_POS[1], 11.8], P),
+  isoUx,
+  isoUy,
+  knobCenter: k.iso([KNOB_POS[0], KNOB_POS[1], 11.8], P),
+  chuckCenter: k.iso([CRUC[0], CRUC[1], 47.8], P),
+  crucCenter: k.iso([CRUC[0], CRUC[1], Z_MELT], P),
   stepZ: [
-    k.iso([0, 0, 1], P)[0] - k.iso([0, 0, 0], P)[0],
-    k.iso([0, 0, 1], P)[1] - k.iso([0, 0, 0], P)[1],
+    k.iso([0, 0, 1], P)[0] - isoO[0],
+    k.iso([0, 0, 1], P)[1] - isoO[1],
   ],
 };
 
@@ -362,8 +385,11 @@ const LIVE_SCRIPT = `
   const stage = document.querySelector(".cz-stage");
   const canvas = stage.querySelector(".cz-gl");
   const boule = stage.querySelector('[data-part="boule"]');
+  const bouleFrames = stage.querySelectorAll("[data-boule-frame]");
   const pullhead = stage.querySelector('[data-part="pullhead"]');
-  const knob = stage.querySelector('[data-part="knob"]');
+  const knobMarker = stage.querySelector('[data-part="knob-marker"]');
+  const chuckMark = stage.querySelector('[data-part="chuck-mark"]');
+  const crucMark = stage.querySelector('[data-part="cruc-mark"]');
   const readout = document.querySelector("[data-readout]");
   const still = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -378,6 +404,7 @@ const LIVE_SCRIPT = `
   let v = 1.10;
   let targetV = 1.10;
   let phase = 0;
+  let pullZ = 0;
   let raf = 0;
   let dragging = false;
   let dragStartX = 0;
@@ -385,25 +412,55 @@ const LIVE_SCRIPT = `
 
   const clampV = (val) => Math.max(0.40, Math.min(2.00, val));
 
+  function isoRay(center, r0, r1, ang) {
+    const c = Math.cos(ang);
+    const s = Math.sin(ang);
+    const ux = c * CFG.isoUx[0] + s * CFG.isoUy[0];
+    const uy = c * CFG.isoUx[1] + s * CFG.isoUy[1];
+    return (
+      "M" +
+      (center[0] + r0 * ux).toFixed(2) +
+      " " +
+      (center[1] + r0 * uy).toFixed(2) +
+      "L" +
+      (center[0] + r1 * ux).toFixed(2) +
+      " " +
+      (center[1] + r1 * uy).toFixed(2)
+    );
+  }
+
+  function advanceGrowth(scale) {
+    phase += v * scale;
+    pullZ = (pullZ + v * scale * 0.24) % 1.50;
+  }
+
   function draw() {
     const norm = (v - 0.40) / 1.60;
-    const liftMm = (norm - 0.4375) * 4.2;
-    const dx = liftMm * CFG.stepZ[0];
-    const dy = liftMm * CFG.stepZ[1];
+    const dx = pullZ * CFG.stepZ[0];
+    const dy = pullZ * CFG.stepZ[1];
     const xform = "translate(" + dx.toFixed(2) + " " + dy.toFixed(2) + ")";
     if (boule) boule.setAttribute("transform", xform);
     if (pullhead) pullhead.setAttribute("transform", xform);
 
-    const knobDeg = (norm - 0.4375) * 140;
-    if (knob) {
-      knob.setAttribute(
-        "transform",
-        "rotate(" + knobDeg.toFixed(2) + " " + CFG.knobOrigin[0].toFixed(2) + " " + CFG.knobOrigin[1].toFixed(2) + ")",
-      );
+    const frameIdx = Math.max(0, Math.min(16, Math.round((v - 0.40) / 0.10)));
+    for (let i = 0; i < bouleFrames.length; i++) {
+      if (i === frameIdx) bouleFrames[i].removeAttribute("style");
+      else bouleFrames[i].setAttribute("style", "display:none");
+    }
+
+    const knobAng = (norm - 0.4375) * 2.45;
+    if (knobMarker) {
+      knobMarker.setAttribute("d", isoRay(CFG.knobCenter, 0, 6.2, knobAng));
+    }
+    if (chuckMark) {
+      chuckMark.setAttribute("d", isoRay(CFG.chuckCenter, 0, 4.4, phase));
+    }
+    if (crucMark) {
+      crucMark.setAttribute("d", isoRay(CFG.crucCenter, 19.8, 22.2, -phase * 0.65));
     }
 
     const bouleR = 9.2 - 1.45 * v;
-    const voronkov = v / 0.82;
+    const voronkov = v / 8.2;
     const isBalanced = v >= 0.85 && v <= 1.35;
     if (boule) {
       if (isBalanced) boule.setAttribute("data-lit", "true");
@@ -426,8 +483,8 @@ const LIVE_SCRIPT = `
       " mm/min · R " +
       bouleR.toFixed(1) +
       " mm · v/G " +
-      voronkov.toFixed(2) +
-      " (" +
+      voronkov.toFixed(3) +
+      " mm²/K·min (" +
       regime +
       ")";
     if (readout && readout.textContent !== text) readout.textContent = text;
@@ -448,19 +505,19 @@ const LIVE_SCRIPT = `
     const diff = targetV - v;
     if (Math.abs(diff) < 0.002) {
       v = targetV;
-      phase += (targetV - 1.10) * 0.25;
+      advanceGrowth(0.18);
       draw();
       return;
     }
     v += diff * 0.22;
-    phase += diff * 1.8;
+    advanceGrowth(0.14);
     draw();
     raf = requestAnimationFrame(step);
   }
 
   function setTarget(next) {
     targetV = clampV(next);
-    phase += (targetV - v) * 2.2;
+    advanceGrowth(0.22);
     if (still.matches) {
       if (raf) {
         cancelAnimationFrame(raf);
@@ -490,8 +547,8 @@ const LIVE_SCRIPT = `
     const box = stage.getBoundingClientRect();
     const deltaV = ((e.clientX - dragStartX) / Math.max(180, box.width * 0.65)) * 1.6;
     targetV = clampV(dragStartV + deltaV);
-    phase += (targetV - v) * 3.0;
     v = targetV;
+    advanceGrowth(0.16);
     draw();
   });
 
@@ -535,14 +592,14 @@ const body = k.plateHtml({
   fig: "Fig 1",
   title: "Czochralski silicon crystal puller",
   hint: "Drag · arrow keys · 1–4",
-  readout: "v 1.10 mm/min · R 7.6 mm · v/G 1.34 (Voronkov neutral)",
+  readout: "v 1.10 mm/min · R 7.6 mm · v/G 0.134 mm²/K·min (Voronkov neutral)",
   keys: [
-    { mark: "lit", label: "Monocrystalline <100> silicon boule, seed chuck, and pull-rate rotary control knob" },
-    { mark: "raised", label: "Leadscrew puller column, cantilevered pullhead carriage, and RF-heated fused-quartz crucible" },
+    { mark: "lit", label: "Monocrystalline ⟨100⟩ silicon boule, counter-rotating seed chuck, and pull-rate rotary control knob" },
+    { mark: "raised", label: "Leadscrew puller column, cantilevered pullhead carriage, and RF-heated graphite susceptor with fused-quartz crucible liner" },
     { mark: "flat", label: "1420 °C molten silicon convection pool and glowing solidification meniscus ring" },
   ],
   caption:
-    "In the Czochralski process, electronic-grade polysilicon is melted at 1420 °C inside a rotating fused-quartz crucible heated by radio-frequency induction coils. A seed crystal oriented along the <100> crystallographic plane is dipped into the free melt surface and withdrawn upward at pull rate v while counter-rotating; surface tension supports an incandescent liquid meniscus at the solid–liquid interface where crystal radius R scales inversely with pull speed and the Voronkov ratio v/G governs point-defect incorporation.",
+    "In the Czochralski process, electronic-grade polysilicon is held at 1420 °C, just above its 1414 °C melting point, inside a rotating fused-quartz crucible liner cradled by a radio-frequency induction-heated graphite susceptor. A seed crystal oriented along the ⟨100⟩ crystallographic direction is dipped into the free melt surface and withdrawn upward at pull rate v while counter-rotating; surface tension supports an incandescent liquid meniscus at the solid–liquid interface where crystal radius R falls as pull speed rises and the Voronkov ratio v/G governs point-defect incorporation.",
   body: `<style>${EXTRA_CSS}</style>${stage}`,
 });
 
