@@ -164,26 +164,37 @@ function buildStatics() {
   });
 
   const valveF = VERT(O2[0], O2[1]);
-  const valveArcs = [8.5, 13.0, 17.5].map((z) => G.arcOf(valveF, z, 8.2, P)).join("");
+  const valveBaseSvg =
+    S(k.cylinder(O2[0], O2[1], 9.2, PED_H, GUIDE_Z1 - PED_H, P, 32, 0.45), { tone: "mid" }) +
+    k.dotsSvg(G.dotsOf(valveF, GUIDE_Z1, 7.8, 8, P, { all: true }), { size: 0.38 });
+  put({
+    name: "valve.base",
+    layer: "back",
+    at: [O2[0], O2[1], (PED_H + GUIDE_Z1) / 2],
+    svg: `<g data-mat="gunmetal">${valveBaseSvg}</g>`,
+    shapes: [A.cylinder(O2[0], O2[1], 9.2, PED_H, GUIDE_Z1 - PED_H)],
+  });
+
+  const valveArcs = [14.5, 17.5, 20.0].map((z) => G.arcOf(valveF, z, 8.2, P)).join("");
   const valveBodySvg =
-    S(k.cylinder(O2[0], O2[1], 8.2, PED_H, BRIDGE_Z0 - PED_H, P, 32, 0.5), {
+    S(k.cylinder(O2[0], O2[1], 8.2, GUIDE_Z1, BRIDGE_Z0 - GUIDE_Z1, P, 32, 0.5), {
       tone: "mid",
       inner: L(valveArcs, { tone: "lo" }),
     });
   put({
     name: "valve.body",
-    layer: "back",
-    at: [O2[0], O2[1], (PED_H + BRIDGE_Z0) / 2],
+    layer: "mid",
+    at: [O2[0], O2[1], (GUIDE_Z1 + BRIDGE_Z0) / 2],
     svg: `<g data-mat="gunmetal">${valveBodySvg}</g>`,
-    shapes: [A.cylinder(O2[0], O2[1], 8.2, PED_H, BRIDGE_Z0 - PED_H)],
+    shapes: [A.cylinder(O2[0], O2[1], 8.2, GUIDE_Z1, BRIDGE_Z0 - GUIDE_Z1)],
   });
 
-  const bridgePlan = { x: -39, y: -13, w: 86, d: 26, r: 9 };
+  const bridgePlan = { x: -36, y: -8.5, w: 80, d: 17, r: 6 };
   const bridgeBolts = [
-    [-32, -7],
-    [-32, 7],
-    [40, -7],
-    [40, 7],
+    [-31, -4.8],
+    [-31, 4.8],
+    [39, -4.8],
+    [39, 4.8],
   ];
   const bridgeSvg =
     S(k.slabOf(bridgePlan, BRIDGE_Z0, BRIDGE_Z1 - BRIDGE_Z0, P, 8, 0.8), {
@@ -241,7 +252,15 @@ function buildStatics() {
 
 export const T = turning(P, { recorder: R });
 const sleeve = T.group("sleeve", { slide: { direction: [0, 0, 1], travel: LIFT_MAX } });
-const rotor = T.group("rotor", { parent: sleeve, turn: { pivot: O1 } });
+const rotor = T.group("rotor", { turn: { pivot: O1 } });
+const wingL = T.group("wingL", {
+  parent: rotor,
+  slide: { direction: [-0.86, 0, 0.51], travel: 4.6 },
+});
+const wingR = T.group("wingR", {
+  parent: rotor,
+  slide: { direction: [0.86, 0, 0.51], travel: 4.6 },
+});
 const throttle = T.group("throttle", { turn: { pivot: O2 } });
 
 const sleeveLayer = T.layer("sleeve");
@@ -250,10 +269,16 @@ T.stack(["back", "sleeve", "mid", "rotor"]);
 
 export const follow = (values) => {
   const rot = values.rotor ?? 0;
-  const u = 0.5 * (1 - Math.cos((rot * Math.PI) / 720));
+  const rpm =
+    values.rpm !== undefined
+      ? Math.max(80, Math.min(200, values.rpm))
+      : 80 + 120 * (0.5 * (1 - Math.cos((rot * Math.PI) / 720)));
+  const hRatio = (80 * 80) / (rpm * rpm);
+  const u = Math.max(0, Math.min(1, (1 - hRatio) / (1 - (80 * 80) / (200 * 200))));
+  const swing = u * 4.6;
   const lift = u * 3.4;
   const th = -u * 75;
-  return { ...values, rotor: rot, sleeve: lift, throttle: th };
+  return { ...values, rotor: rot, rpm, wingL: swing, wingR: swing, sleeve: lift, throttle: th };
 };
 
 export const poses = () => Array.from({ length: 1440 }, (_, deg) => follow({ rotor: deg }));
@@ -278,7 +303,7 @@ T.round({
   F: VERT(O1[0], O1[1]),
   s0: 13.8,
   s1: 16.6,
-  r: 5.2,
+  r: 5.0,
   tone: "mid",
   material: "steel",
 });
@@ -296,58 +321,105 @@ T.round({
   material: "brass",
 });
 
+const linkRodPlan = { x: O1[0] + 5.2, y: -1.0, w: O2[0] - 8.4 - (O1[0] + 5.2), d: 5.2, r: 1.4 };
+T.prism({
+  name: "sleeve.rod",
+  group: sleeve,
+  layer: sleeveLayer,
+  plan: linkRodPlan,
+  z: 13.8,
+  h: 1.8,
+  steps: 4,
+  bevel: 0.25,
+  tone: "hi",
+  crease: "lo",
+  material: "steel",
+});
+
+const clevisPlan = { x: O2[0] - 14.0, y: -1.4, w: 5.6, d: 6.0, r: 1.5 };
+T.prism({
+  name: "sleeve.clevis",
+  group: sleeve,
+  layer: sleeveLayer,
+  plan: clevisPlan,
+  z: 15.6,
+  h: 2.4,
+  steps: 4,
+  bevel: 0.3,
+  tone: "hi",
+  crease: "lo",
+  material: "brass",
+});
+
 T.round({
   name: "rotor.collar",
   group: rotor,
   layer: rotorLayer,
   F: VERT(O1[0], O1[1]),
   s0: NECK_Z1,
-  s1: 33.8,
+  s1: 33.6,
   r: 7.8,
   tone: "mid",
   material: "gunmetal",
   details: {
-    seams: [31.4, 33.4],
-    ribs: { s0: 31.4, s1: 33.4, count: 32, fade: [0.08, 0.52], seams: true, tone: "lo" },
+    seams: [31.4, 33.2],
+    ribs: { s0: 31.4, s1: 33.2, count: 32, fade: [0.08, 0.52], seams: true, tone: "lo" },
   },
 });
 
-const crossArmPlan = { x: O1[0] - 19.0, y: -3.6, w: 38.0, d: 7.2, r: 2.8 };
+const crossbarPlan = { x: O1[0] - 16.2, y: -3.4, w: 32.4, d: 6.8, r: 2.4 };
 T.prism({
-  name: "rotor.arm",
+  name: "rotor.crossbar",
   group: rotor,
   layer: rotorLayer,
-  plan: crossArmPlan,
-  z: 33.8,
-  h: 2.4,
+  plan: crossbarPlan,
+  z: 33.6,
+  h: 2.0,
   steps: 4,
-  bevel: 0.4,
-  tone: "hi",
+  bevel: 0.35,
+  tone: "mid",
   crease: "lo",
   material: "steel",
 });
 
-const FLY_OFFSET = 13.5;
-for (const [idx, sign] of [
-  [0, -1],
-  [1, 1],
+for (const [idx, sign, wingGroup] of [
+  [0, -1, wingL],
+  [1, 1, wingR],
 ]) {
-  const wx = O1[0] + sign * FLY_OFFSET;
+  const armPlan =
+    sign < 0
+      ? { x: O1[0] - 15.4, y: -2.2, w: 10.4, d: 4.4, r: 1.5 }
+      : { x: O1[0] + 5.0, y: -2.2, w: 10.4, d: 4.4, r: 1.5 };
+  T.prism({
+    name: `rotor.arm.${idx}`,
+    group: wingGroup,
+    layer: rotorLayer,
+    plan: armPlan,
+    z: 35.6,
+    h: 1.8,
+    steps: 4,
+    bevel: 0.3,
+    tone: "hi",
+    crease: "lo",
+    material: "steel",
+  });
+
+  const wx = O1[0] + sign * 11.2;
   T.round({
     name: `rotor.weight.${idx}`,
-    group: rotor,
+    group: wingGroup,
     layer: rotorLayer,
     F: VERT(wx, O1[1]),
-    s0: 36.2,
-    s1: 42.2,
-    r: 5.0,
+    s0: 37.4,
+    s1: 43.2,
+    r: 4.6,
     tone: "hi",
     crease: "lo",
     material: "brass",
     details: {
-      seams: [36.7, 41.7],
-      ribs: { s0: 36.7, s1: 41.7, count: 28, fade: [0.08, 0.52], seams: true, tone: "lo" },
-      bolts: [{ s: 42.2, r: 0, count: 1, size: 0.45 }],
+      seams: [37.9, 42.7],
+      ribs: { s0: 37.9, s1: 42.7, count: 28, fade: [0.08, 0.52], seams: true, tone: "lo" },
+      bolts: [{ s: 43.2, r: 0, count: 1, size: 0.45 }],
     },
   });
 }
@@ -357,9 +429,9 @@ T.round({
   group: rotor,
   layer: rotorLayer,
   F: VERT(O1[0], O1[1]),
-  s0: 36.2,
-  s1: 40.0,
-  r: 4.2,
+  s0: 35.6,
+  s1: 40.2,
+  r: 4.0,
   tone: "mid",
   material: "steel",
 });
@@ -369,12 +441,12 @@ T.round({
   group: rotor,
   layer: rotorLayer,
   F: VERT(O1[0], O1[1]),
-  s0: 40.0,
-  s1: 41.6,
-  r: 3.0,
+  s0: 40.2,
+  s1: 41.8,
+  r: 2.8,
   tone: "hi",
   material: "chrome",
-  details: { bolts: [{ s: 41.6, r: 0, count: 1, size: 0.42 }] },
+  details: { bolts: [{ s: 41.8, r: 0, count: 1, size: 0.42 }] },
 });
 
 T.round({
@@ -440,12 +512,12 @@ if (argv.includes("--audit")) {
 }
 
 const LABEL =
-  "A centrifugal flyball governor and coupled steam throttle valve on a cast plinth: as the twin brass flyweights spin around the vertical spindle, centrifugal lift raises the sliding collar spool and closes the butterfly throttle vane proportionally.";
+  "A centrifugal flyball governor and coupled steam throttle valve on a cast plinth: as the twin brass flyweights spin faster around the vertical spindle, centrifugal force swings the flyweights outward and upward (h = g/ω²), lifting the sliding collar spool and transfer linkage rod to close the butterfly throttle vane proportionally.";
 const backSvg = k.figureSvg({ width: WIDTH, height: HEIGHT, label: LABEL, body: BACK });
 const staticSvg = (list) =>
   `<svg xmlns="http://www.w3.org/2000/svg" class="iso-svg iso-layer" viewBox="0 0 ${WIDTH} ${HEIGHT}" aria-hidden="true">${list.join("")}</svg>`;
 
-const stage = `<div class="iso-stage iso-turn wg-stage" tabindex="0" role="slider" aria-label="Centrifugal flyball governor: drag around the rotor or use arrow keys to spin the flyweights, lift the sliding collar, and modulate the throttle valve" aria-valuemin="80" aria-valuemax="200" aria-valuenow="80" aria-valuetext="80 RPM, sleeve 0.0 mm, throttle 100% open">${backSvg}${out.layerSvg("sleeve", { width: WIDTH, height: HEIGHT })}${staticSvg(MID)}${out.layerSvg("rotor", { width: WIDTH, height: HEIGHT })}</div>`;
+const stage = `<div class="iso-stage iso-turn wg-stage" tabindex="0" role="slider" aria-label="Centrifugal flyball governor: drag or use arrow keys and keys 1 through 4 to adjust spindle speed in RPM, swing the flyweights outward, lift the sliding collar linkage, and modulate the throttle valve" aria-valuemin="80" aria-valuemax="200" aria-valuenow="80" aria-valuetext="80 RPM, sleeve 0.0 mm, throttle 100% open">${backSvg}${out.layerSvg("sleeve", { width: WIDTH, height: HEIGHT })}${staticSvg(MID)}${out.layerSvg("rotor", { width: WIDTH, height: HEIGHT })}</div>`;
 
 const EXTRA_CSS = `
 .wg-stage { cursor: grab; touch-action: none; user-select: none; }
@@ -461,25 +533,31 @@ const LIVE_SCRIPT = `
   const readout = document.querySelector("[data-readout]");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
   let angle = 0;
-  let target = 0;
+  let rpm = 80;
+  let targetRpm = still.matches ? 80 : 140;
   let touring = !still.matches;
   let idle = 0;
   let last = 0;
   let own = false;
   let dragging = false;
+  let dragStartX = 0;
   let dragStartAngle = 0;
-  let dragBase = 0;
-  const SPEED = 56;
+  let dragBaseAngle = 0;
+  let dragBaseRpm = 80;
 
-  function show(rotorDeg) {
-    const u = 0.5 * (1 - Math.cos((rotorDeg * Math.PI) / 720));
-    const rpm = Math.round(80 + u * 120);
+  const clampRpm = (v) => Math.max(80, Math.min(200, v));
+
+  function show(curRpm) {
+    const r = clampRpm(curRpm);
+    const hRatio = (80 * 80) / (r * r);
+    const u = Math.max(0, Math.min(1, (1 - hRatio) / (1 - (80 * 80) / (200 * 200))));
+    const dispRpm = Math.round(r);
     const liftMm = u * 3.4;
     const valvePct = Math.round(100 - u * 85);
-    const text = rpm + " RPM · lift " + liftMm.toFixed(1) + " mm · throttle " + valvePct + "%";
+    const text = dispRpm + " RPM · lift " + liftMm.toFixed(1) + " mm · throttle " + valvePct + "%";
     if (readout && readout.textContent !== text) readout.textContent = text;
-    stage.setAttribute("aria-valuenow", String(rpm));
-    stage.setAttribute("aria-valuetext", rpm + " RPM, sleeve " + liftMm.toFixed(1) + " mm, throttle " + valvePct + "% open");
+    stage.setAttribute("aria-valuenow", String(dispRpm));
+    stage.setAttribute("aria-valuetext", dispRpm + " RPM, sleeve " + liftMm.toFixed(1) + " mm, throttle " + valvePct + "% open");
   }
 
   const controller = TURN.mount(stage, DATA.turn, {
@@ -490,13 +568,18 @@ const LIVE_SCRIPT = `
       clearTimeout(idle);
     },
     onFrame: (turned) => {
-      const value = turned.values.rotor ?? 0;
       if (!own) {
-        angle = target = value;
+        angle = turned.values.rotor ?? angle;
       }
-      show(value);
+      show(turned.values.rpm ?? rpm);
     },
   });
+
+  function applyState() {
+    own = true;
+    controller.set({ rotor: angle, rpm });
+    own = false;
+  }
 
   function hold() {
     touring = false;
@@ -512,41 +595,66 @@ const LIVE_SCRIPT = `
     hold();
     stage.focus({ preventScroll: true });
     dragging = true;
+    dragStartX = e.clientX;
     dragStartAngle = controller.angleAt(e.clientX, e.clientY, 36, "rotor");
-    dragBase = angle;
+    dragBaseAngle = angle;
+    dragBaseRpm = rpm;
     if (stage.setPointerCapture) {
       try { stage.setPointerCapture(e.pointerId); } catch {}
     }
   });
   stage.addEventListener("pointermove", (e) => {
     if (!dragging) return;
+    hold();
     const cur = controller.angleAt(e.clientX, e.clientY, 36, "rotor");
-    angle = target = dragBase + (cur - dragStartAngle);
-    own = true;
-    controller.set({ rotor: angle });
-    own = false;
+    const box = stage.getBoundingClientRect();
+    const dRpm = ((e.clientX - dragStartX) / Math.max(160, box.width * 0.55)) * 120;
+    rpm = targetRpm = clampRpm(dragBaseRpm + dRpm);
+    angle = dragBaseAngle + (cur - dragStartAngle);
+    applyState();
   });
   const endDrag = () => { dragging = false; };
   stage.addEventListener("pointerup", endDrag);
   stage.addEventListener("pointercancel", endDrag);
 
   stage.addEventListener("keydown", (e) => {
+    const stepRpm = e.shiftKey ? 20 : 10;
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
       hold();
-      target = angle + 18;
-      angle = target;
-      own = true;
-      controller.set({ rotor: angle });
-      own = false;
+      rpm = targetRpm = clampRpm(targetRpm + stepRpm);
+      angle += 24;
+      applyState();
     } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
       e.preventDefault();
       hold();
-      target = angle - 18;
-      angle = target;
-      own = true;
-      controller.set({ rotor: angle });
-      own = false;
+      rpm = targetRpm = clampRpm(targetRpm - stepRpm);
+      angle -= 24;
+      applyState();
+    } else if (e.key === "1") {
+      e.preventDefault();
+      hold();
+      rpm = targetRpm = 80;
+      angle += 18;
+      applyState();
+    } else if (e.key === "2") {
+      e.preventDefault();
+      hold();
+      rpm = targetRpm = 120;
+      angle += 18;
+      applyState();
+    } else if (e.key === "3") {
+      e.preventDefault();
+      hold();
+      rpm = targetRpm = 160;
+      angle += 18;
+      applyState();
+    } else if (e.key === "4") {
+      e.preventDefault();
+      hold();
+      rpm = targetRpm = 200;
+      angle += 18;
+      applyState();
     }
   });
 
@@ -555,30 +663,28 @@ const LIVE_SCRIPT = `
     if (!last) last = now;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    angle += SPEED * dt;
-    target = angle;
-    own = true;
-    controller.set({ rotor: angle });
-    own = false;
+    rpm += (targetRpm - rpm) * Math.min(1, dt * 2.4);
+    angle += rpm * 0.55 * dt;
+    applyState();
     requestAnimationFrame(tick);
   }
 
-  controller.set({ rotor: 0 });
+  applyState();
   if (touring) requestAnimationFrame(tick);
 })();
 `;
 
 const body = k.plateHtml({
-  fig: "Fig 3D",
+  fig: "Fig 1",
   title: "Centrifugal flyball governor",
-  hint: "Drag the rotor · arrow keys",
+  hint: "Drag · arrow keys · 1–4",
   readout: "80 RPM · lift 0.0 mm · throttle 100%",
   keys: [
-    { mark: "raised", label: "Rotating cross-arm yoke, twin brass flyweights, and sliding collar spool" },
+    { mark: "raised", label: "Rotating spindle yoke, outward-swinging brass flyweights, and sliding collar linkage rod" },
     { mark: "lit", label: "Proportional steam throttle butterfly vane and calibration bezel" },
   ],
   caption:
-    "An interactive 3D Watt centrifugal governor and proportional feedback valve. Spinning the vertical governor spindle swings the twin brass flyweights, lifting the sliding thrust collar spool and closing the coupled steam butterfly valve from 100% at 80 RPM down to 15% at 200 RPM.",
+    "An interactive 3D Watt centrifugal governor and proportional feedback valve. Increasing the spindle speed ω swings the twin brass flyweights outward and upward (h = g/ω²) while the spindle head remains seated on the bearing neck, pulling the sliding collar spool and horizontal transfer rod upward to close the coupled steam butterfly valve from 100% at 80 RPM down to 15% at 200 RPM.",
   body: `<style>${out.css}\n${EXTRA_CSS}</style>${stage}`,
 });
 
