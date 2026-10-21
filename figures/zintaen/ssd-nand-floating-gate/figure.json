@@ -5,7 +5,7 @@
   "prompt": "Build a three-level recursive cutaway zooming from an M.2 NVMe solid-state drive PCB into its 3D NAND flash package and down to a 4-cell floating-gate MOSFET string with Fowler–Nordheim tunneling program, erase, and read states.",
   "kind": "SVG",
   "agent": "Antigravity",
-  "model": "Gemini",
+  "model": "Gemini 3.1 Pro",
   "minutes": 25,
   "tokens": 110000,
   "skill": {

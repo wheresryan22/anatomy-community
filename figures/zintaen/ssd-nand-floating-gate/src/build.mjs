@@ -25,29 +25,29 @@ const CHASSIS_Z0 = 0;
 const CHASSIS_H = 12;
 const CHASSIS_TOP = CHASSIS_Z0 + CHASSIS_H;
 
-const PCB = { x: -84, y: -62, w: 168, d: 124, r: 4 };
+const PCB = { x: -90, y: -48, w: 180, d: 78, r: 3.5 };
 const PCB_Z0 = CHASSIS_TOP;
 const PCB_H = 3;
 const PCB_TOP = PCB_Z0 + PCB_H;
 
-const M2_CONN = { x: -81, y: -48, w: 16, d: 58, r: 1.8 };
+const M2_CONN = { x: -89, y: -34, w: 15, d: 50, r: 1.6 };
 const M2_CONN_H = 4.2;
 
-const CTRL_SOC = { x: -59, y: -54, w: 24, d: 34, r: 2.2 };
+const CTRL_SOC = { x: -66, y: -42, w: 24, d: 30, r: 2.2 };
 const CTRL_H = 8.5;
-const CTRL_SINK = { x: -57, y: -51, w: 20, d: 28, r: 1.6 };
+const CTRL_SINK = { x: -64, y: -39, w: 20, d: 24, r: 1.6 };
 const CTRL_SINK_H = 4.0;
 
-const DRAM_CHIP = { x: -59, y: -14, w: 24, d: 28, r: 2.0 };
+const DRAM_CHIP = { x: -66, y: -6, w: 24, d: 28, r: 2.0 };
 const DRAM_H = 5.2;
 
-const NAND2_BASE = { x: 36, y: -52, w: 40, d: 42, r: 2.5 };
+const NAND2_BASE = { x: 35, y: -36, w: 34, d: 54, r: 2.5 };
 const NAND2_BASE_H = 3.5;
-const NAND2_PKG = { x: 40, y: -48, w: 32, d: 34, r: 2.0 };
+const NAND2_PKG = { x: 38, y: -32, w: 28, d: 46, r: 2.0 };
 const NAND2_PKG_H = 6.2;
 
 const IO_BAR = { x: -58, y: 36, w: 116, d: 20, r: 2.5 };
-const IO_BAR_H = 7;
+const IO_BAR_H = 10;
 
 const BGA_SUB = { x: -26, y: -26, w: 56, d: 52, r: 3 };
 const BGA_Z0 = PCB_TOP;
@@ -135,6 +135,7 @@ function makeHelpers(P, R) {
   const wrapSvg = (baseSvg, opts = {}) => {
     const attrs = [];
     if (opts.part) attrs.push(`data-part="${opts.part}"`);
+    if (opts.action) attrs.push(`data-action="${opts.action}"`);
     if (opts.fade) attrs.push(`data-fade="${opts.fade}"`);
     if (opts.mat) attrs.push(`data-mat="${opts.mat}"`);
     if (opts.cls) attrs.push(`class="${opts.cls}"`);
@@ -225,13 +226,12 @@ function buildLevel0() {
 
   const busLines = [];
   for (let i = -2; i <= 2; i++) {
-    const off = i * 3.6;
-    busLines.push(k.lineOnTop([CTRL_SOC.x + CTRL_SOC.w - 2, -32 + off], [BGA_SUB.x + 2, -14 + off], PCB_TOP, P0));
-    busLines.push(k.lineOnTop([BGA_SUB.x + BGA_SUB.w - 2, -16 + off], [NAND2_BASE.x + 2, -26 + off], PCB_TOP, P0));
-    busLines.push(k.lineOnTop([2 + off * 2, BGA_SUB.y + BGA_SUB.d - 2], [2 + off * 2, IO_BAR.y + 2], PCB_TOP, P0));
+    const off = i * 3.4;
+    busLines.push(k.lineOnTop([CTRL_SOC.x + CTRL_SOC.w - 2, -26 + off], [BGA_SUB.x + 2, -14 + off], PCB_TOP, P0));
+    busLines.push(k.lineOnTop([BGA_SUB.x + BGA_SUB.w - 2, -12 + off], [NAND2_BASE.x + 2, -12 + off], PCB_TOP, P0));
   }
   const pcbExtra =
-    line(k.planOutline(k.insetPlan(PCB, 3), PCB_TOP, P0), "faint") +
+    line(k.planOutline(k.insetPlan(PCB, 2.8), PCB_TOP, P0), "faint") +
     `<g data-part="l0-lines">${line(busLines.join(""), "lo", { free: true })}</g>`;
   slab("pcb.board", PCB, PCB_Z0, PCB_H, "lo", { bevel: 0.5, extra: pcbExtra });
 
@@ -250,11 +250,12 @@ function buildLevel0() {
   for (let fy = CTRL_SINK.y + 4; fy <= CTRL_SINK.y + CTRL_SINK.d - 4; fy += 5) {
     sinkFins.push(k.lineOnTop([CTRL_SINK.x + 2.5, fy], [CTRL_SINK.x + CTRL_SINK.w - 2.5, fy], PCB_TOP + CTRL_H + CTRL_SINK_H, P0));
   }
-  slab("ctrl.soc", CTRL_SOC, PCB_TOP, CTRL_H, "mid", { bevel: 0.6, fade: "l0", mat: "steel" });
+  slab("ctrl.soc", CTRL_SOC, PCB_TOP, CTRL_H, "mid", { bevel: 0.6, fade: "l0", mat: "steel", action: "cycle-mode" });
   slab("ctrl.sink", CTRL_SINK, PCB_TOP + CTRL_H, CTRL_SINK_H, "hi", {
     bevel: 0.4,
     fade: "l0",
     mat: "steel",
+    action: "cycle-mode",
     extra: `<g data-part="l0-lines">${line(sinkFins.join(""), "lo", { free: true })}</g>`,
   });
 
@@ -262,6 +263,7 @@ function buildLevel0() {
     bevel: 0.5,
     fade: "l0",
     mat: "gunmetal",
+    action: "step-charge",
     extra: `<g data-part="l0-lines">${line(k.planOutline(k.insetPlan(DRAM_CHIP, 2.5), PCB_TOP + DRAM_H, P0), "lo")}</g>`,
   });
 
@@ -272,12 +274,12 @@ function buildLevel0() {
     mat: "gunmetal",
     extra: `<g data-part="l0-lines">${line(k.planOutline(k.insetPlan(NAND2_PKG, 2.5), PCB_TOP + NAND2_BASE_H + NAND2_PKG_H, P0), "lo")}</g>`,
   });
-  cyl("m2.standoff", 56, 8, 8.2, PCB_TOP, 5.2, "mid", { bevel: 0.4, fade: "l0", mat: "steel" });
-  cyl("m2.screw", 56, 8, 5.0, PCB_TOP + 5.2, 2.4, "hi", {
+  cyl("m2.standoff", 80, -9, 7.2, PCB_TOP, 5.2, "mid", { bevel: 0.4, fade: "l0", mat: "steel" });
+  cyl("m2.screw", 80, -9, 4.6, PCB_TOP + 5.2, 2.4, "hi", {
     bevel: 0.3,
     fade: "l0",
     mat: "brass",
-    extra: `<g data-part="l0-lines">${line(k.ring(56, 8, 2.6, PCB_TOP + 7.6, P0, 18), "lo")}</g>`,
+    extra: `<g data-part="l0-lines">${line(k.ring(80, -9, 2.4, PCB_TOP + 7.6, P0, 18), "lo")}</g>`,
   });
 
   slab("bga.frame", BGA_SUB, BGA_Z0, BGA_H, "lo", {
@@ -286,16 +288,17 @@ function buildLevel0() {
   });
   slab("nand.pkg", NAND_PKG, PKG_Z0, PKG_H, "mid", { bevel: 0.4, mat: "gunmetal" });
 
-  slab("io.bar", IO_BAR, PCB_TOP, IO_BAR_H, "lo", { bevel: 0.6, fade: "l0" });
-  const ledZ = PCB_TOP + IO_BAR_H;
+  slab("io.bar", IO_BAR, CHASSIS_TOP, IO_BAR_H, "lo", { bevel: 0.6, fade: "l0", action: "step-charge" });
+  const ledZ = CHASSIS_TOP + IO_BAR_H;
   for (let b = 0; b < 4; b++) {
+    const bit = 3 - b;
     const lxQ = IO_BAR.x + 10 + b * 6.2;
     const lxW = IO_BAR.x + 42 + b * 6.2;
     const lxD = IO_BAR.x + 74 + b * 6.2;
     const ly = IO_BAR.y + 10;
-    lamp(`io.ledQ${b}`, lxQ, ly, 2.2, 1.3, 1.7, 1.1, ledZ, `l0-q-${b}`, "fg-led", "l0");
-    lamp(`io.ledW${b}`, lxW, ly, 2.2, 1.3, 1.7, 1.1, ledZ, `l0-wl-${b}`, "fg-led", "l0");
-    lamp(`io.ledD${b}`, lxD, ly, 2.2, 1.3, 1.7, 1.1, ledZ, `l0-bl-${b}`, "fg-led", "l0");
+    lamp(`io.ledQ${bit}`, lxQ, ly, 2.2, 1.3, 1.7, 1.1, ledZ, `l0-q-${bit}`, "fg-led", "l0");
+    lamp(`io.ledW${bit}`, lxW, ly, 2.2, 1.3, 1.7, 1.1, ledZ, `l0-wl-${bit}`, "fg-led", "l0");
+    lamp(`io.ledD${bit}`, lxD, ly, 2.2, 1.3, 1.7, 1.1, ledZ, `l0-bl-${bit}`, "fg-led", "l0");
   }
   lamp("io.ledHV", IO_BAR.x + 106, IO_BAR.y + 10, 2.4, 1.3, 1.9, 1.3, ledZ, "l0-hv", "fg-led", "l0");
 
@@ -364,21 +367,22 @@ function buildLevel1() {
     `<g data-part="l1-lines">${line(dieBus.join(""), "lo", { free: true })}</g>`;
   slab("l1.die", DIE, DIE_Z0, DIE_H, "lo", { bevel: 0.25, extra: dieExtra });
 
-  slab("l1.pump", PUMP_BLK, DIE_TOP, DIE_BLK_H, "mid", { bevel: 0.2, fade: "l1", mat: "steel" });
-  cyl("l1.cap0", PUMP_BLK.x + 3.4, PUMP_BLK.y + 5.0, 1.7, DIE_TOP + DIE_BLK_H, 1.1, "hi", { bevel: 0.15, fade: "l1", mat: "brass" });
-  cyl("l1.cap1", PUMP_BLK.x + 7.6, PUMP_BLK.y + 5.0, 1.7, DIE_TOP + DIE_BLK_H, 1.1, "hi", { bevel: 0.15, fade: "l1", mat: "brass" });
+  slab("l1.pump", PUMP_BLK, DIE_TOP, DIE_BLK_H, "mid", { bevel: 0.2, fade: "l1", mat: "steel", action: "cycle-mode" });
+  cyl("l1.cap0", PUMP_BLK.x + 3.4, PUMP_BLK.y + 5.0, 1.7, DIE_TOP + DIE_BLK_H, 1.1, "hi", { bevel: 0.15, fade: "l1", mat: "brass", action: "cycle-mode" });
+  cyl("l1.cap1", PUMP_BLK.x + 7.6, PUMP_BLK.y + 5.0, 1.7, DIE_TOP + DIE_BLK_H, 1.1, "hi", { bevel: 0.15, fade: "l1", mat: "brass", action: "cycle-mode" });
 
-  slab("l1.status", STATUS_BLK, DIE_TOP, DIE_BLK_H, "mid", { bevel: 0.2, fade: "l1" });
+  slab("l1.status", STATUS_BLK, DIE_TOP, DIE_BLK_H, "mid", { bevel: 0.2, fade: "l1", action: "cycle-mode" });
   const fZ = DIE_TOP + DIE_BLK_H;
   lamp("l1.flagHV", STATUS_BLK.x + 3.5, STATUS_BLK.y + 4.2, 1.15, 0.65, 0.9, 0.6, fZ, "l1-flag-hv", "fg-led", "l1");
   lamp("l1.flagVfy", STATUS_BLK.x + 7.5, STATUS_BLK.y + 4.2, 1.15, 0.65, 0.9, 0.6, fZ, "l1-flag-vfy", "fg-led", "l1");
 
-  slab("l1.pgbuf", PGBUF_BLK, DIE_TOP, DIE_BLK_H, "mid", { bevel: 0.2, fade: "l1" });
+  slab("l1.pgbuf", PGBUF_BLK, DIE_TOP, DIE_BLK_H, "mid", { bevel: 0.2, fade: "l1", action: "step-charge" });
   const rZ = DIE_TOP + DIE_BLK_H;
   for (let b = 0; b < 4; b++) {
+    const bit = 3 - b;
     const rx = PGBUF_BLK.x + 2 + b * 2.3;
-    lamp(`l1.bufQ${b}`, rx, PGBUF_BLK.y + 3.4, 0.82, 0.5, 0.65, 0.45, rZ, `l1-q-${b}`, "fg-led", "l1");
-    lamp(`l1.bufD${b}`, rx, PGBUF_BLK.y + 8.0, 0.82, 0.5, 0.65, 0.45, rZ, `l1-bl-${b}`, "fg-led", "l1");
+    lamp(`l1.bufQ${bit}`, rx, PGBUF_BLK.y + 3.4, 0.82, 0.5, 0.65, 0.45, rZ, `l1-q-${bit}`, "fg-led", "l1");
+    lamp(`l1.bufD${bit}`, rx, PGBUF_BLK.y + 8.0, 0.82, 0.5, 0.65, 0.45, rZ, `l1-bl-${bit}`, "fg-led", "l1");
   }
 
   slab("l1.cellArray", CELL_ARRAY, ARRAY_Z0, ARRAY_H, "mid", {
@@ -412,7 +416,7 @@ function buildLevel2() {
   const { slab, lamp, line, settledLayer } = makeHelpers(P2, R);
 
   const stringTraces = [];
-  const xSrc = CELL_ARRAY.x + 0.9 + 3.65;
+  const xSrc = CELL_ARRAY.x + 0.9 + 3.55;
   const xDrn = CELL_ARRAY.x + 0.9 + 7.35 + 1.08;
   for (let b = 0; b < 3; b++) {
     const sy0 = CELL_ARRAY.y + 1.0 + b * 2.9;
@@ -431,58 +435,54 @@ function buildLevel2() {
       line(stringTraces.join(""), "lo", { free: true }),
   });
 
-  const sliceH = 0.8;
-  const gateH = 0.46;
+  const sliceH = 0.52;
   const sliceZ = ARRAY_TOP;
   const gateZ = ARRAY_TOP + sliceH;
+  const hCh = 0.24;
+  const hTun = 0.22;
+  const hFg = 0.30;
+  const hOno = 0.20;
+  const hCg = 0.28;
 
   for (let b = 0; b < 4; b++) {
     const sy = CELL_ARRAY.y + 1.0 + b * 2.9;
     const sliceBox = { x: CELL_ARRAY.x + 0.9, y: sy, w: CELL_ARRAY.w - 1.8, d: 2.35, r: 0.25 };
 
-    const tunOx = { x: sliceBox.x + 0.45, y: sy + 0.2, w: 2.05, d: 0.72, r: 0.14 };
-    const fltGate = { x: sliceBox.x + 0.45, y: sy + 1.12, w: 2.05, d: 0.72, r: 0.14 };
-    const ctrlGate = { x: sliceBox.x + 4.15, y: sy + 0.2, w: 2.05, d: 0.72, r: 0.14 };
-    const chanPath = { x: sliceBox.x + 4.15, y: sy + 1.12, w: 2.05, d: 0.72, r: 0.14 };
-    const senseNode = { x: sliceBox.x + 7.35, y: sy + 1.1, w: 2.15, d: 0.92, r: 0.14 };
-    const latchPad = { x: sliceBox.x + 10.35, y: sy + 0.35, w: 2.75, d: 1.45, r: 0.18 };
+    const chanPath = { x: sliceBox.x + 0.45, y: sy + 0.24, w: 6.20, d: 1.86, r: 0.20 };
+    const tunOx = { x: sliceBox.x + 0.85, y: sy + 0.34, w: 5.40, d: 1.66, r: 0.18 };
+    const fltGate = { x: sliceBox.x + 1.25, y: sy + 0.44, w: 4.60, d: 1.46, r: 0.16 };
+    const onoDiel = { x: sliceBox.x + 1.60, y: sy + 0.52, w: 3.90, d: 1.30, r: 0.14 };
+    const ctrlGate = { x: sliceBox.x + 1.90, y: sy + 0.60, w: 3.30, d: 1.14, r: 0.14 };
+    const senseNode = { x: sliceBox.x + 7.35, y: sy + 0.45, w: 2.15, d: 1.45, r: 0.16 };
+    const latchPad = { x: sliceBox.x + 10.35, y: sy + 0.45, w: 2.75, d: 1.45, r: 0.18 };
 
-    const xG0 = sliceBox.x + 2.8;
-    const xP = sliceBox.x + 3.2;
-    const xC = sliceBox.x + 3.65;
-    const xG1 = sliceBox.x + 6.85;
     const wires = [
-      k.lineOnTop([tunOx.x + tunOx.w - 0.2, sy + 0.46], [ctrlGate.x + 0.2, sy + 0.46], gateZ, P2),
-      k.lineOnTop([xP, sy + 0.46], [xP, sy + 1.36], gateZ, P2),
-      k.lineOnTop([xP, sy + 1.36], [chanPath.x + 0.2, sy + 1.36], gateZ, P2),
-      k.lineOnTop([xC, b === 0 ? sy + 0.72 : sy + 0.1], [xC, sy + 1.62], gateZ, P2),
-      k.lineOnTop([xC, sy + 0.72], [ctrlGate.x + 0.2, sy + 0.72], gateZ, P2),
-      k.lineOnTop([xC, sy + 1.62], [chanPath.x + 0.2, sy + 1.62], gateZ, P2),
-      k.lineOnTop([ctrlGate.x + ctrlGate.w - 0.2, sy + 0.56], [latchPad.x + 0.2, sy + 0.56], gateZ, P2),
-      k.lineOnTop([chanPath.x + chanPath.w - 0.2, sy + 1.38], [senseNode.x + 0.2, sy + 1.38], gateZ, P2),
-      k.lineOnTop([fltGate.x + fltGate.w - 0.2, sy + 1.62], [xG0, sy + 1.62], gateZ, P2),
-      k.lineOnTop([xG0, sy + 1.62], [xG0, sy + 2.14], gateZ, P2),
-      k.lineOnTop([xG0, sy + 2.14], [xG1, sy + 2.14], gateZ, P2),
-      k.lineOnTop([xG1, sy + 2.14], [xG1, sy + 1.78], gateZ, P2),
-      k.lineOnTop([xG1, sy + 1.78], [senseNode.x + 0.2, sy + 1.78], gateZ, P2),
+      k.lineOnTop([chanPath.x + chanPath.w - 0.15, sy + 1.18], [senseNode.x + 0.15, sy + 1.18], gateZ, P2),
+      k.lineOnTop([senseNode.x + senseNode.w - 0.15, sy + 1.18], [latchPad.x + 0.15, sy + 1.18], gateZ, P2),
     ];
     if (b < 3) {
-      wires.push(k.lineOnTop([senseNode.x + 1.08, sy + 1.9], [senseNode.x + 1.08, sy + 2.25], gateZ, P2));
+      wires.push(k.lineOnTop([senseNode.x + 1.08, sy + 1.75], [senseNode.x + 1.08, sy + 2.22], gateZ, P2));
     }
     slab(`l2.cell${b}.base`, sliceBox, sliceZ, sliceH, "mid", {
       bevel: 0.08,
       extra: line(wires.join(""), "lo", { free: true }),
     });
 
-    slab(`l2.cell${b}.tunOx`, tunOx, gateZ, gateH, "hi", { crease: "none", part: `l2-tun-${b}`, cls: "fg-gate" });
-    slab(`l2.cell${b}.fltGate`, fltGate, gateZ, gateH, "mid", { crease: "none", part: `l2-fg-${b}`, cls: "fg-gate", mat: "brass" });
-    slab(`l2.cell${b}.ctrlGate`, ctrlGate, gateZ, gateH, "hi", { crease: "none", part: `l2-cg-${b}`, cls: "fg-gate" });
-    slab(`l2.cell${b}.chanPath`, chanPath, gateZ, gateH, "mid", { crease: "none", part: `l2-ch-${b}`, cls: "fg-gate" });
-    slab(`l2.cell${b}.senseNode`, senseNode, gateZ, gateH, "hi", { crease: "none", part: `l2-sn-${b}`, cls: "fg-gate" });
-    slab(`l2.cell${b}.latchPad`, latchPad, gateZ, gateH * 0.8, "mid", { crease: "none" });
+    const zTun = gateZ + hCh;
+    const zFg = zTun + hTun;
+    const zOno = zFg + hFg;
+    const zCg = zOno + hOno;
 
-    lamp(`l2.cell${b}.qLamp`, latchPad.x + 1.38, latchPad.y + 0.72, 0.46, 0.28, 0.36, 0.26, gateZ + gateH * 0.8, `l2-q-${b}`);
-    lamp(`l2.cell${b}.blLamp`, senseNode.x + 1.08, senseNode.y + 0.46, 0.4, 0.24, 0.3, 0.22, gateZ + gateH, `l2-bl-${b}`);
+    slab(`l2.cell${b}.chanPath`, chanPath, gateZ, hCh, "mid", { crease: "none", part: `l2-ch-${b}`, cls: "fg-gate", action: "cycle-mode" });
+    slab(`l2.cell${b}.tunOx`, tunOx, zTun, hTun, "hi", { crease: "none", part: `l2-tun-${b}`, cls: "fg-gate", action: "cycle-mode" });
+    slab(`l2.cell${b}.fltGate`, fltGate, zFg, hFg, "mid", { crease: "none", part: `l2-fg-${b}`, cls: "fg-gate", mat: "brass", action: "step-charge" });
+    slab(`l2.cell${b}.ono`, onoDiel, zOno, hOno, "lo", { crease: "none", action: "cycle-mode" });
+    slab(`l2.cell${b}.ctrlGate`, ctrlGate, zCg, hCg, "hi", { crease: "none", part: `l2-cg-${b}`, cls: "fg-gate", action: "cycle-mode" });
+    slab(`l2.cell${b}.senseNode`, senseNode, gateZ, 0.46, "hi", { crease: "none", part: `l2-sn-${b}`, cls: "fg-gate" });
+    slab(`l2.cell${b}.latchPad`, latchPad, gateZ, 0.38, "mid", { crease: "none", action: "step-charge" });
+
+    lamp(`l2.cell${b}.qLamp`, latchPad.x + 1.38, latchPad.y + 0.72, 0.46, 0.28, 0.36, 0.26, gateZ + 0.38, `l2-q-${b}`);
+    lamp(`l2.cell${b}.blLamp`, senseNode.x + 1.08, senseNode.y + 0.72, 0.4, 0.24, 0.3, 0.22, gateZ + 0.46, `l2-bl-${b}`);
   }
 
   A.settle(R, P2);
@@ -524,7 +524,7 @@ const svgMarkup = k.figureSvg({
 
 const EXTRA_CSS = `<style>
   ${TURN.materialCss()}
-  .iso-stage { cursor: pointer; touch-action: none; user-select: none; }
+  .iso-stage { cursor: pointer; touch-action: pan-y; user-select: none; }
   .iso-stage:focus { outline: none; }
   .iso-stage:focus-visible { outline: 1px solid var(--anatomy-muted); outline-offset: 6px; }
   .fg-led .iso-top, .fg-led .iso-shade, .fg-gate .iso-top { transition: fill 120ms ease; }
@@ -565,15 +565,23 @@ const LIVE_SCRIPT = `
   const LIFT1 = ${JSON.stringify(lift1)};
   const LIFT2 = ${JSON.stringify(lift2)};
 
-  function nandStringModel(chargeMask, modeBits) {
+  let chargePattern = 10;
+  let opMode = 0;
+  let selWl = 1;
+  let zoom = 0;
+  let targetZoom = 0;
+  let raf = 0;
+  let lastNow = 0;
+
+  function nandStringModel(chargeMask, modeBits, selectedWl) {
     const mode = modeBits % 3;
     const slices = [];
     let readWord = 0;
-    let hvActive = mode !== 0 ? 1 : 0;
+    const hvActive = mode !== 0 ? 1 : 0;
     for (let i = 0; i < 4; i++) {
-      const qTrapped = mode === 2 ? 0 : (chargeMask >> i) & 1;
-      const wlHigh = mode === 0 ? 1 : mode === 1 ? qTrapped : 0;
-      const fnTunnel = mode === 1 ? qTrapped : mode === 2 ? 1 : 0;
+      const qTrapped = (chargeMask >> i) & 1;
+      const wlHigh = mode === 0 ? (i !== selectedWl ? 1 : 0) : mode === 1 ? (i === selectedWl ? 1 : qTrapped) : 0;
+      const fnTunnel = mode === 1 ? (i === selectedWl ? 1 : qTrapped) : mode === 2 ? 1 : 0;
       const channelOn = qTrapped === 0 ? 1 : 0;
       const bitOut = channelOn;
       slices.push({
@@ -585,35 +593,52 @@ const LIVE_SCRIPT = `
       });
       readWord |= (bitOut << i);
     }
-    return { chargeMask, mode, hvActive, readWord, slices };
+    return { chargeMask, mode, selectedWl, hvActive, readWord, slices };
   }
 
   function flashDieModel(str) {
-    const modeNames = ["READ 4.5V", "PGM +18V", "ERS -18V"];
+    const modeNames = ["READ 0V/4.5V", "PGM +18V", "ERS P-well +20V"];
+    const flagVfy =
+      str.mode === 1
+        ? (str.chargeMask >> str.selectedWl) & 1
+        : str.mode === 2
+          ? str.chargeMask === 0
+            ? 1
+            : 0
+          : 0;
     return {
       str,
       modeName: modeNames[str.mode],
       flagHV: str.hvActive,
-      flagVfy: str.readWord !== 0 ? 1 : 0,
+      flagVfy,
     };
   }
 
-  function ssdBoardModel(die, zoom) {
-    const level = zoom < 0.5 ? 0 : zoom < 1.5 ? 1 : 2;
+  function ssdBoardModel(die, z) {
+    const level = z < 0.5 ? 0 : z < 1.5 ? 1 : 2;
     const names = ["L0 SSD", "L1 NAND die", "L2 FG string"];
     return {
       die,
-      zoom,
+      zoom: z,
       level,
       levelName: names[level],
     };
   }
 
-  let chargePattern = 10;
-  let opMode = 0;
-  let zoom = 0;
-  let targetZoom = 0;
-  let raf = 0;
+  function advancePattern() {
+    chargePattern = ((chargePattern + 1) & 15) || 1;
+    selWl = (selWl + 1) & 3;
+    opMode = 0;
+  }
+
+  function advanceMode() {
+    opMode = (opMode + 1) % 3;
+    if (opMode === 1) {
+      chargePattern |= 1 << selWl;
+    } else if (opMode === 2) {
+      chargePattern = 0;
+    }
+  }
 
   const smooth = (t) => t * t * (3 - 2 * t);
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -624,7 +649,7 @@ const LIVE_SCRIPT = `
   }
 
   function render() {
-    const str = nandStringModel(chargePattern, opMode);
+    const str = nandStringModel(chargePattern, opMode, selWl);
     const die = flashDieModel(str);
     const ssd = ssdBoardModel(die, zoom);
 
@@ -700,15 +725,18 @@ const LIVE_SCRIPT = `
     }
   }
 
-  function stepAnim() {
+  function stepAnim(now) {
+    const dt = lastNow ? Math.min(0.05, (now - lastNow) / 1000) : 1 / 60;
+    lastNow = now;
     const diff = targetZoom - zoom;
     if (Math.abs(diff) < 0.002) {
       zoom = targetZoom;
+      lastNow = 0;
       render();
       raf = 0;
       return;
     }
-    zoom += diff * 0.18;
+    zoom += diff * (1 - Math.exp(-12 * dt));
     render();
     raf = requestAnimationFrame(stepAnim);
   }
@@ -719,17 +747,25 @@ const LIVE_SCRIPT = `
     if (instant || reduced) {
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
+      lastNow = 0;
       zoom = targetZoom;
       render();
     } else if (!raf) {
+      lastNow = 0;
       raf = requestAnimationFrame(stepAnim);
     }
   }
 
   stage.addEventListener("click", (e) => {
     stage.focus({ preventScroll: true });
-    if (e.shiftKey) {
-      chargePattern = (chargePattern + 1) & 15;
+    const actEl = e.target && e.target.closest ? e.target.closest("[data-action]") : null;
+    if (e.shiftKey || (actEl && actEl.getAttribute("data-action") === "step-charge")) {
+      advancePattern();
+      render();
+      return;
+    }
+    if (actEl && actEl.getAttribute("data-action") === "cycle-mode") {
+      advanceMode();
       render();
       return;
     }
@@ -738,6 +774,7 @@ const LIVE_SCRIPT = `
   });
 
   stage.addEventListener("wheel", (e) => {
+    if (!e.ctrlKey && !e.metaKey && zoom <= 0.01 && targetZoom <= 0.01) return;
     e.preventDefault();
     setTargetZoom(targetZoom + (e.deltaY < 0 ? 0.35 : -0.35));
   }, { passive: false });
@@ -748,11 +785,11 @@ const LIVE_SCRIPT = `
     else if (e.key === "3") setTargetZoom(2);
     else if (e.key === "ArrowUp" || e.key === "a" || e.key === "A") {
       e.preventDefault();
-      chargePattern = (chargePattern + 1) & 15;
+      advancePattern();
       render();
     } else if (e.key === "ArrowDown" || e.key === "b" || e.key === "B") {
       e.preventDefault();
-      opMode = (opMode + 1) % 3;
+      advanceMode();
       render();
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
@@ -778,15 +815,15 @@ const bodyHtml =
   k.plateHtml({
     fig: "Fig 1",
     title: "From NVMe SSD to floating-gate cell",
-    hint: "click or 1–3 to zoom · A / B",
-    readout: "L0 SSD · READ 4.5V · Q 1010 → D 0101",
+    hint: "click or 1–3 zoom · A pattern · B mode",
+    readout: "L0 SSD · READ 0V/4.5V · Q 1010 → D 0101",
     keys: [
-      { mark: "raised", label: "Three orthographic zoom levels (M.2 NVMe SSD board, 3D NAND die, 4-cell FG-MOSFET string)" },
-      { mark: "lit", label: "Shared Fowler–Nordheim tunneling and threshold-voltage sense model across all three levels" },
+      { mark: "raised", label: "Three orthographic zoom levels (M.2 2280 NVMe SSD stick, 3D NAND die, 4-cell FG-MOSFET string)" },
+      { mark: "lit", label: "Shared Fowler–Nordheim tunneling (PGM +18 V / ERS P-well +20 V) and selected-WL read sense model" },
       { mark: "edge", label: "Epoxy package cap and bitline metal shield lift away as the view zooms from board to cells" },
     ],
     caption:
-      "A three-level recursive cutaway in a single isometric world. Level 0 shows an M.2 NVMe solid-state drive with its gold PCIe edge connector, finned controller SoC, LPDDR4 DRAM cache, host readout bar, and dual BGA 3D NAND packages. Zooming to Level 1 lifts the epoxy package cap to reveal the silicon flash die: Dickson high-voltage charge pump (±18 V), verify status flags, page buffer latches, and the NAND cell array under its copper bitline shield. Zooming to Level 2 lifts the shield to expose four series-connected floating-gate MOSFET cells (tunnel oxide, polysilicon floating gate, control gate WL0–WL3, inversion channel, and bitline sense latch). Trapped electrons raise cell threshold voltage Vth and invert the sensed bitline output D = ¬Q upward across all three levels.",
+      "A three-level recursive cutaway in a single isometric world. Level 0 shows an M.2 2280 NVMe solid-state drive stick with its left-edge gold PCIe connector fingers, finned controller SoC, LPDDR4 DRAM cache, right-edge mounting standoff screw, dual BGA 3D NAND packages, and front host readout bar. Zooming to Level 1 lifts the epoxy package cap to reveal the silicon flash die: Dickson high-voltage charge pump, program/erase verify status flags, page buffer latches, and the NAND cell array under its copper bitline shield. Zooming to Level 2 lifts the shield to expose four series-connected floating-gate MOSFET cells stacked vertically in z (silicon inversion channel → SiO₂ tunnel oxide → brass polysilicon floating gate → inter-poly ONO dielectric → wordline control gate WL0–WL3) alongside their bitline sense latches. During read, unselected wordlines receive Vpass = 4.5 V while the selected wordline is biased near 0 V so trapped floating-gate charge Q inverts the sensed bitline output D = ¬Q.",
     body: `<div class="iso-stage" tabindex="0" role="group" aria-label="Three-level recursive zoom from M.2 NVMe SSD to 3D NAND die to 4-cell floating-gate MOSFET string.">${svgMarkup}</div>`,
   });
 
