@@ -1,0 +1,39 @@
+{
+  "id": "bourdon-pressure-gauge",
+  "title": "Bourdon tube pressure gauge",
+  "author": "zintaen",
+  "prompt": "Explain how internal fluid pressure uncoils a flattened C-section bronze Bourdon tube and amplifies millimetre tip travel through a hinged link and sector-and-pinion gear train to sweep a 270-degree dial pointer.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Gemini 3.1 Pro",
+  "minutes": 25,
+  "tokens": 95000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/bourdon-pressure-gauge-light.html",
+    "dark": "src/bourdon-pressure-gauge.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "mechanics",
+    "pressure",
+    "gauge",
+    "kinematics",
+    "instrumentation"
+  ],
+  "created": "2026-10-21"
+}
