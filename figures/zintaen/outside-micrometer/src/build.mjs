@@ -211,12 +211,16 @@ function buildStatics() {
     shapes: [A.cylinder(O1[0], O1[1], 9.6, BRIDGE_Z1, SLEEVE_FLANGE_Z1 - BRIDGE_Z1)],
   });
 
-  const barrelGradArcs = [29.4, 30.2, 31.0].map((z) => G.arcOf(sleeveF, z, 7.4, P)).join("");
+  const barrelGradArcs = [30.4, 32.0, 33.6, 35.2].map((z) => G.arcOf(sleeveF, z, 7.4, P)).join("");
+  const [vx, vy] = k.towardViewer(P);
+  const fidX = O1[0] + 7.4 * vx;
+  const fidY = O1[1] + 7.4 * vy;
+  const fidLine = k.segment([fidX, fidY, 29.6], [fidX, fidY, 35.2], P);
   const sleeveBarrelSvg =
-    S(k.cylinder(O1[0], O1[1], 7.4, SLEEVE_FLANGE_Z1, SLEEVE_TOP - SLEEVE_FLANGE_Z1, P, 32, 0.35), {
+    S(k.cylinder(O1[0], O1[1], 7.4, SLEEVE_FLANGE_Z1, 35.6 - SLEEVE_FLANGE_Z1, P, 32, 0.35), {
       tone: "hi",
       crease: "lo",
-      inner: L(barrelGradArcs, { tone: "lo" }),
+      inner: L(barrelGradArcs, { tone: "lo" }) + L(fidLine, { tone: "hi", free: true }),
     });
   put({
     name: "sleeve.barrel",
@@ -251,20 +255,15 @@ const spindleLayer = T.layer("spindle");
 const thimbleLayer = T.layer("thimble");
 T.stack(["back", "spindle", "mid", "thimble"]);
 
-export function micrometerProgress(thimbleDeg) {
-  const period = 1440;
-  const wrapped = ((thimbleDeg % period) + period) % period;
-  return wrapped <= 720 ? wrapped / 720 : (period - wrapped) / 720;
-}
-
 export const follow = (values) => {
   const th = values.thimble ?? 0;
   const period = 1440;
   const wrapped = ((th % period) + period) % period;
-  const u = wrapped <= 720 ? wrapped / 720 : (period - wrapped) / 720;
+  const eff = wrapped <= 720 ? wrapped : period - wrapped;
+  const u = eff / 720;
   const s = u * 3.2;
   const d = -u * 360;
-  return { ...values, thimble: th, spindle: s, dial: d };
+  return { ...values, thimble: eff, spindle: s, dial: d };
 };
 
 export const poses = () => Array.from({ length: 1440 }, (_, deg) => follow({ thimble: deg }));
@@ -360,9 +359,9 @@ const tick = (angle, from, to) =>
 
 const thimbleCapMarkup = () => {
   const ticks = [];
-  for (let i = 0; i < 25; i++) {
-    const a = (i / 25) * Math.PI * 2;
-    ticks.push(tick(a, 8.6 - (i % 5 === 0 ? 2.2 : 1.2), 8.6 - 0.5));
+  for (let i = 0; i < 50; i++) {
+    const a = (i / 50) * Math.PI * 2;
+    ticks.push(tick(a, 8.6 - (i % 5 === 0 ? 1.8 : 0.95), 8.6 - 0.35));
   }
   return `<path class="iso-line" data-tone="lo" d="${ticks.join("")}"/>`;
 };
@@ -487,7 +486,7 @@ if (argv.includes("--audit")) {
 }
 
 const LABEL =
-  "A precision outside micrometer Screw-and-thimble mechanism with a coupled comparator dial: rotating the knurled thimble and brass ratchet stop translates the ground spindle axially relative to the lower carbide anvil at 0.50 mm per revolution while sweeping the comparator needle across a 0.00 to 1.00 mm scale.";
+  "A precision outside micrometer: a screw-and-thimble mechanism with a coupled comparator dial where rotating the knurled thimble and brass ratchet stop translates the ground spindle axially relative to the lower carbide anvil at 0.50 mm per revolution while sweeping the comparator needle across a 0.00 to 1.00 mm scale.";
 const backSvg = k.figureSvg({ width: WIDTH, height: HEIGHT, label: LABEL, body: BACK });
 const staticSvg = (list) =>
   `<svg xmlns="http://www.w3.org/2000/svg" class="iso-svg iso-layer" viewBox="0 0 ${WIDTH} ${HEIGHT}" aria-hidden="true">${list.join("")}</svg>`;
@@ -504,12 +503,11 @@ const LIVE_SCRIPT = `
 (() => {
   const DATA = ${JSON.stringify(DATA)};
   const follow = ${follow.toString()};
-  const micrometerProgress = ${micrometerProgress.toString()};
   const stage = document.querySelector(".om-stage");
   const readout = document.querySelector("[data-readout]");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
   let angle = 0;
-  let target = 0;
+  let dir = 1;
   let touring = !still.matches;
   let idle = 0;
   let last = 0;
@@ -518,12 +516,12 @@ const LIVE_SCRIPT = `
   let dragStartAngle = 0;
   let dragBase = 0;
   const SPEED = 48;
+  const clampAngle = (v) => Math.max(0, Math.min(720, v));
 
   function show(thimbleDeg) {
-    const u = micrometerProgress(thimbleDeg);
-    const gapMm = u * 1.0;
-    const effDeg = u * 720;
-    const rev = Math.floor(effDeg / 360 + 1e-6);
+    const posed = follow({ thimble: thimbleDeg });
+    const effDeg = posed.thimble;
+    const gapMm = (effDeg / 720) * 1.0;
     const div = Math.round(((effDeg % 360) / 360) * 50) % 50;
     const text = gapMm.toFixed(2) + " mm · div " + String(div).padStart(2, "0") + "/50 · turn " + effDeg.toFixed(0) + "°";
     if (readout && readout.textContent !== text) readout.textContent = text;
@@ -541,7 +539,7 @@ const LIVE_SCRIPT = `
     onFrame: (turned) => {
       const value = turned.values.thimble ?? 0;
       if (!own) {
-        angle = target = value;
+        angle = clampAngle(value);
       }
       show(value);
     },
@@ -569,8 +567,9 @@ const LIVE_SCRIPT = `
   });
   stage.addEventListener("pointermove", (e) => {
     if (!dragging) return;
+    hold();
     const cur = controller.angleAt(e.clientX, e.clientY, 40, "thimble");
-    angle = target = dragBase + (cur - dragStartAngle);
+    angle = clampAngle(dragBase + (cur - dragStartAngle));
     own = true;
     controller.set({ thimble: angle });
     own = false;
@@ -580,19 +579,18 @@ const LIVE_SCRIPT = `
   stage.addEventListener("pointercancel", endDrag);
 
   stage.addEventListener("keydown", (e) => {
+    const stepDeg = e.shiftKey ? 36 : 7.2;
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
       hold();
-      target = angle + 14.4;
-      angle = target;
+      angle = clampAngle(Math.round((angle + stepDeg) / 7.2) * 7.2);
       own = true;
       controller.set({ thimble: angle });
       own = false;
     } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
       e.preventDefault();
       hold();
-      target = angle - 14.4;
-      angle = target;
+      angle = clampAngle(Math.round((angle - stepDeg) / 7.2) * 7.2);
       own = true;
       controller.set({ thimble: angle });
       own = false;
@@ -604,8 +602,14 @@ const LIVE_SCRIPT = `
     if (!last) last = now;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    angle += SPEED * dt;
-    target = angle;
+    angle += dir * SPEED * dt;
+    if (angle >= 720) {
+      angle = 720;
+      dir = -1;
+    } else if (angle <= 0) {
+      angle = 0;
+      dir = 1;
+    }
     own = true;
     controller.set({ thimble: angle });
     own = false;
@@ -618,12 +622,12 @@ const LIVE_SCRIPT = `
 `;
 
 const body = k.plateHtml({
-  fig: "Fig 3D",
+  fig: "Fig 1",
   title: "Outside micrometer",
   hint: "Drag the thimble · arrow keys",
   readout: "0.00 mm · div 00/50 · turn 0°",
   keys: [
-    { mark: "raised", label: "Knurled thimble, 50-division vernier skirt, and brass ratchet stop" },
+    { mark: "raised", label: "Knurled thimble, 50-division graduated thimble skirt, and brass ratchet stop" },
     { mark: "lit", label: "Translating carbide-faced spindle and coupled comparator dial" },
   ],
   caption:
