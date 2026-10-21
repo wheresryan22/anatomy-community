@@ -1,0 +1,39 @@
+{
+  "id": "seismograph-pendulum",
+  "title": "Inertial pendulum seismograph",
+  "author": "zintaen",
+  "prompt": "Explain how an inertial horizontal pendulum seismograph works: how a suspended heavy proof mass stays nearly stationary by inertia while the bedrock frame, suspension mast, eddy-current damper magnet, and rotating recording drum oscillate beneath its magnifying mechanical stylus.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Claude Opus 4.6",
+  "minutes": 28,
+  "tokens": 115000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/seismograph-pendulum-light.html",
+    "dark": "src/seismograph-pendulum.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "seismograph",
+    "geophysics",
+    "pendulum",
+    "inertia",
+    "mechanics"
+  ],
+  "created": "2026-10-21"
+}
