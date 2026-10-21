@@ -1,0 +1,38 @@
+{
+  "id": "stirling-engine",
+  "title": "Stirling heat engine",
+  "author": "zintaen",
+  "prompt": "Build an interactive 3D Beta-type coaxial displacer Stirling heat engine showing how a 90°-out-of-phase displacer shuttles sealed working gas between a heated hot cap and a finned cold sink to drive a power piston and coupled pressure-volume indicator, verified across all 1440 degrees with turn-audit and turn-check.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Gemini 3.1 Pro",
+  "minutes": 20,
+  "tokens": 90000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/stirling-engine-light.html",
+    "dark": "src/stirling-engine.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "thermodynamics",
+    "stirling-engine",
+    "heat-engine",
+    "kinematics"
+  ],
+  "created": "2026-10-20"
+}
