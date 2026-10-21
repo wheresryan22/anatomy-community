@@ -275,20 +275,33 @@ T.round({
 
 const PIN_X = O1[0] - ECC_R;
 T.round({
-  name: "crank.pin",
+  name: "crank.pin.base",
   group: crank,
   layer: crankLayer,
   F: VERT(PIN_X, O1[1]),
   s0: ARM_Z1,
   s1: PIN_Z1,
-  r: 2.2,
+  r: 2.85,
+  tone: "mid",
+  crease: "lo",
+  material: "brass",
+});
+
+T.round({
+  name: "crank.pin",
+  group: crank,
+  layer: yokeLayer,
+  F: VERT(PIN_X, O1[1]),
+  s0: PIN_Z1,
+  s1: 16.6,
+  r: 2.85,
   tone: "hi",
   crease: "lo",
   material: "brass",
-  details: { bolts: [{ s: PIN_Z1, r: 0, count: 1, size: 0.42 }] },
+  details: { bolts: [{ s: 16.6, r: 0, count: 1, size: 0.45 }] },
 });
 
-const cheekLeftPlan = { x: -47.5, y: -17.5, w: 4.3, d: 35.0, r: 1.3 };
+const cheekLeftPlan = { x: -47.5, y: -17.5, w: 4.5, d: 35.0, r: 1.3 };
 T.prism({
   name: "yoke.cheek.left",
   group: yoke,
@@ -303,7 +316,7 @@ T.prism({
   material: "steel",
 });
 
-const cheekRightPlan = { x: -36.8, y: -17.5, w: 4.3, d: 35.0, r: 1.3 };
+const cheekRightPlan = { x: -37.0, y: -17.5, w: 4.5, d: 35.0, r: 1.3 };
 T.prism({
   name: "yoke.cheek.right",
   group: yoke,
@@ -358,7 +371,7 @@ T.prism({
   },
 });
 
-const rodPlan = { x: -36.8, y: -3.2, w: 28.8, d: 6.4, r: 1.6 };
+const rodPlan = { x: -37.0, y: -3.2, w: 29.0, d: 6.4, r: 1.6 };
 T.prism({
   name: "yoke.rod",
   group: yoke,
@@ -461,7 +474,6 @@ const LIVE_SCRIPT = `
   const readout = document.querySelector("[data-readout]");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
   let angle = 0;
-  let target = 0;
   let touring = !still.matches;
   let idle = 0;
   let last = 0;
@@ -492,7 +504,7 @@ const LIVE_SCRIPT = `
     onFrame: (turned) => {
       const value = turned.values.crank ?? 0;
       if (!own) {
-        angle = target = value;
+        angle = value;
       }
       show(value);
     },
@@ -520,8 +532,9 @@ const LIVE_SCRIPT = `
   });
   stage.addEventListener("pointermove", (e) => {
     if (!dragging) return;
+    hold();
     const cur = controller.angleAt(e.clientX, e.clientY, 12, "crank");
-    angle = target = dragBase + (cur - dragStartAngle);
+    angle = dragBase + (cur - dragStartAngle);
     own = true;
     controller.set({ crank: angle });
     own = false;
@@ -534,16 +547,14 @@ const LIVE_SCRIPT = `
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
       hold();
-      target = angle + 15;
-      angle = target;
+      angle += 15;
       own = true;
       controller.set({ crank: angle });
       own = false;
     } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
       e.preventDefault();
       hold();
-      target = angle - 15;
-      angle = target;
+      angle -= 15;
       own = true;
       controller.set({ crank: angle });
       own = false;
@@ -556,7 +567,6 @@ const LIVE_SCRIPT = `
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     angle += SPEED * dt;
-    target = angle;
     own = true;
     controller.set({ crank: angle });
     own = false;
@@ -569,7 +579,7 @@ const LIVE_SCRIPT = `
 `;
 
 const body = k.plateHtml({
-  fig: "Fig 3D",
+  fig: "Fig 1",
   title: "Scotch yoke harmonic actuator",
   hint: "Drag the crank · arrow keys",
   readout: "x 0.0 mm · v/ωR +0.00 · θ 0°",

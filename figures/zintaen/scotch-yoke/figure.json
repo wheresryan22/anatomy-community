@@ -5,7 +5,7 @@
   "prompt": "Build an interactive 3D Scotch yoke harmonic actuator with a continuously rotating eccentric crank wheel and brass crankpin, a reciprocating slotted yoke carriage, and a coupled harmonic phase indicator dial, verified across all 1440 degrees with turn-audit and turn-check.",
   "kind": "SVG + 3D",
   "agent": "Antigravity",
-  "model": "Gemini",
+  "model": "Gemini 3.1 Pro",
   "minutes": 20,
   "tokens": 90000,
   "skill": {
