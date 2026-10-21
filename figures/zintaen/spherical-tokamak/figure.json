@@ -1,0 +1,39 @@
+{
+  "id": "spherical-tokamak",
+  "title": "Tokamak magnetic fusion torus",
+  "author": "zintaen",
+  "prompt": "Explain how D-shaped toroidal field coils and an inductive central solenoid twist magnetic field lines into a helical cage that cancels grad-B plasma drift in a spherical tokamak.",
+  "kind": "SVG + 3D",
+  "agent": "Antigravity",
+  "model": "Gemini 3.1 Pro",
+  "minutes": 25,
+  "tokens": 115000,
+  "skill": {
+    "kit": "sha256:b387950dbe794bde94aeac6cb5e4079af84866878f6170cad2b1bf960aa6511e"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/spherical-tokamak-light.html",
+    "dark": "src/spherical-tokamak.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "3d",
+    "fusion",
+    "plasma",
+    "tokamak",
+    "magnetism",
+    "physics"
+  ],
+  "created": "2026-10-21"
+}
