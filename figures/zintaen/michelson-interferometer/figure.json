@@ -5,7 +5,7 @@
   "prompt": "Explain how a Michelson interferometer splits a coherent He-Ne laser beam across a fixed reference arm and a micrometer-driven delay arm, recombining the wavefronts into circular Haidinger interference fringes that shift by one full ring per half-wavelength of mirror travel.",
   "kind": "SVG + WebGL",
   "agent": "Antigravity",
-  "model": "Claude Opus 4.6",
+  "model": "Gemini 3.1 Pro",
   "minutes": 32,
   "tokens": 285000,
   "skill": {

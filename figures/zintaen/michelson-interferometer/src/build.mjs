@@ -262,15 +262,24 @@ put({
 const micPed = { x: 58, y: Y_AXIS - 6, w: 20, d: 12, r: 1.6 };
 const micBody = { x: 58, y: Y_AXIS - 5.2, w: 20, d: 10.4, r: 1.6 };
 const MF = G.frameAlong([58, Y_AXIS, Z_OPT - 2], [1, 0, 0]);
+const ribFrames = Array.from({ length: 16 }, (_, p) =>
+  k.fadedSvg(
+    G.ribsOf(MF, 11.0, 18.2, 5.0, 24, P, {
+      phase: (p / 16) * ((Math.PI * 2) / 24),
+      fade: [0.08, 0.48],
+    }),
+    { tone: "lo" },
+  ),
+);
 const micStaticSvg =
   S(k.slabOf(micPed, 0, 6.5, P, 5, 0.4), { tone: "lo" }) +
   `<g data-part="spindle">${S(G.disc(-10, 0, 1.9, MF, P), { tone: "mid" })}</g>` +
-  S(G.disc(0, 9.5, 4.2, MF, P, { bevel: 0.35 }), { tone: "mid", crease: "lo" }) +
-  L(k.segment([58.8, Y_AXIS, Z_OPT + 2.2], [67.0, Y_AXIS, Z_OPT + 2.2], P), { tone: "lo", free: true }) +
+  S(G.disc(0, 13.5, 4.2, MF, P, { bevel: 0.35 }), { tone: "mid", crease: "lo" }) +
+  L(k.segment([58.8, Y_AXIS, Z_OPT + 2.2], [70.8, Y_AXIS, Z_OPT + 2.2], P), { tone: "lo", free: true }) +
   `<g data-part="thimble">` +
   S(G.disc(9.5, 19.5, 5.0, MF, P, { bevel: 0.45 }), { tone: "hi", crease: "lo", lit: true }) +
   L(G.arcOf(MF, 11.0, 5.0, P) + G.arcOf(MF, 18.2, 5.0, P), { tone: "faint" }) +
-  k.fadedSvg(G.ribsOf(MF, 11.0, 18.2, 5.0, 24, P, { fade: [0.08, 0.48] }), { tone: "lo" }) +
+  `<g data-part="thimble-ribs">${ribFrames[0]}</g>` +
   S(G.disc(19.5, 22.5, 3.0, MF, P, { bevel: 0.3 }), { tone: "mid" }) +
   `</g>`;
 
@@ -285,12 +294,15 @@ put({
   ],
 });
 
-const projPed = { x: -5.5, y: 6, w: 11, d: 6, r: 1.2 };
+const projPed = { x: -5.5, y: 6, w: 11, d: 8.2, r: 1.2 };
+const projHood = { x: -4.2, y: 11.8, w: 8.4, d: 2.4, r: 0.9 };
 const PF = G.frameAlong([0, 6, Z_OPT], [0, 1, 0]);
 const projSvg =
   S(k.slabOf(projPed, 0, 8.5, P, 4, 0.3), { tone: "lo" }) +
-  S(G.disc(0, 6.0, 5.0, PF, P, { bevel: 0.35 }), { tone: "mid", crease: "lo" }) +
-  D([at([0, 9, Z_OPT + 5.0])], { size: 0.55, tone: "lit" });
+  S(G.disc(0, 5.8, 5.0, PF, P, { bevel: 0.35 }), { tone: "mid", crease: "lo" }) +
+  S(k.slabOf(projHood, 8.5, 8.8, P, 4, 0.25), { tone: "hi", crease: "lo" }) +
+  L(k.segment([4.2, 12.1, 16.8], [4.2, 13.9, 10.2], P), { tone: "lit", free: true }) +
+  D([at([0, 8.9, Z_OPT + 5.0])], { size: 0.55, tone: "lit" });
 
 put({
   name: "optics.projector",
@@ -299,7 +311,7 @@ put({
   svg: `<g data-part="projector" data-mat="brass" data-lit="true">${projSvg}</g>`,
   shapes: [
     A.slab(projPed, 0, 8.5),
-    A.slab({ x: -5.0, y: 6, w: 10.0, d: 6.0, r: 1.0 }, 8.5, 10.0),
+    A.slab({ x: -5.0, y: 6, w: 10.0, d: 8.2, r: 1.0 }, 8.5, 10.0),
   ],
 });
 
@@ -336,17 +348,11 @@ ${TURN.materialCss()}
 const GL_CONFIG = {
   view: [WIDTH, HEIGHT],
   camera: glCamera(P),
-  yAxis: Y_AXIS,
-  zOpt: Z_OPT,
-  screenPos: SCREEN_POS,
-  screenR: SCREEN_R,
-  screenZ: SCREEN_Z,
-  m1Y: M1_POS[1] + 3.5,
-  m2RestX: M2_REST_X,
   stepVec: [
     k.iso([1, 0, 0], P)[0] - k.iso([0, 0, 0], P)[0],
     k.iso([1, 0, 0], P)[1] - k.iso([0, 0, 0], P)[1],
   ],
+  ribFrames,
 };
 
 const FRAGMENT = `
@@ -418,7 +424,7 @@ void main() {
   if (glow > 0.01 && r > R) {
     vec3 laserCol = uLight > 0.5 ? vec3(0.88, 0.12, 0.09) : vec3(1.0, 0.20, 0.14);
     float bAlpha = clamp(glow * (uLight > 0.5 ? 0.55 : 0.72), 0.0, 0.85);
-    col = mix(col, laserCol, 1.0);
+    col = laserCol;
     alpha = max(alpha, bAlpha);
   }
 
@@ -435,6 +441,7 @@ const LIVE_SCRIPT = `
   const carriage = stage.querySelector('[data-part="carriage"]');
   const spindle = stage.querySelector('[data-part="spindle"]');
   const thimble = stage.querySelector('[data-part="thimble"]');
+  const thimbleRibs = stage.querySelector('[data-part="thimble-ribs"]');
   const projector = stage.querySelector('[data-part="projector"]');
   const readout = document.querySelector("[data-readout]");
   const still = matchMedia("(prefers-reduced-motion: reduce)");
@@ -475,6 +482,10 @@ const LIVE_SCRIPT = `
     if (carriage) carriage.setAttribute("transform", xform);
     if (spindle) spindle.setAttribute("transform", xform);
     if (thimble) thimble.setAttribute("transform", xform);
+    const ribIdx = (((Math.round(dm * 16) % 16) + 16) % 16);
+    if (thimbleRibs && CFG.ribFrames[ribIdx]) {
+      thimbleRibs.innerHTML = CFG.ribFrames[ribIdx];
+    }
     const c0 = Math.cos(Math.PI * dm);
     const bright = c0 * c0;
     if (projector) {
