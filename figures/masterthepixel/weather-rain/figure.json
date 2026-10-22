@@ -1,0 +1,32 @@
+{
+  "id": "weather-rain",
+  "title": "Weather: Rain, tipping-bucket rain gauge with twin see-saw buckets",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Rain\", drawn as a real object (tipping-bucket rain gauge with twin see-saw buckets and a graduated tank) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/rain.html",
+    "light": "src/rain-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "rain"
+  ],
+  "created": "2026-10-22"
+}
