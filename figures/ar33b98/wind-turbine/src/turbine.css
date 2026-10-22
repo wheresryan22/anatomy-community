@@ -1,0 +1,590 @@
+.wt .iso-plate {
+  overflow: hidden;
+}
+
+.wt {
+  --wt-void: #050505;
+  --wt-air: #9aa3ab;
+  --wt-air-strong: #d9dee2;
+  --wt-storm: #ffffff08;
+}
+
+.iso[data-theme="light"] .wt {
+  --wt-void: #b7b9bc;
+  --wt-air: #6f7a84;
+  --wt-air-strong: #2d343a;
+  --wt-storm: #0000000a;
+}
+
+.wt-stage {
+  position: relative;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wt-stage > svg,
+.wt-stage > canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wt-stage > .wt-layer {
+  position: absolute;
+  inset: 0;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+.wt-stage[data-gl] .wt-fallback {
+  display: none;
+}
+
+.wt-fallback .iso-line {
+  stroke: var(--wt-air);
+  stroke-width: 0.7px;
+  stroke-dasharray: 3 5;
+  animation: wt-flow 1.6s linear infinite;
+}
+
+@keyframes wt-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+.wt-void {
+  fill: var(--wt-void);
+  stroke: none;
+}
+
+.wt-fadeout {
+  mask: url(#wt-fade-mask);
+}
+
+.wt-head h1 {
+  margin: 0 0 8px;
+  color: var(--anatomy-strong);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.wt-head p {
+  margin: 0 0 4px;
+  max-width: 64ch;
+  color: var(--anatomy-text);
+}
+
+.wt-said {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Fig 2: selecting a component. Tones step through the kit's own tokens,
+   snapshotted on the stage so a part's overrides never chain into each other. */
+.wt-stage[data-stage="2"] {
+  --wt-hi: var(--anatomy-hi);
+  --wt-mid: var(--anatomy-mid);
+  --wt-lo: var(--anatomy-lo);
+  --wt-faint: var(--anatomy-faint);
+  --wt-lit: var(--anatomy-lit);
+  --wt-paper: var(--anatomy-paper);
+  --wt-top: var(--anatomy-top);
+  --wt-s0: var(--anatomy-shade-0);
+  --wt-s1: var(--anatomy-shade-1);
+  --wt-s2: var(--anatomy-shade-2);
+  --wt-s3: var(--anatomy-shade-3);
+}
+
+.wt-stage[data-stage="2"] [data-comp] {
+  cursor: pointer;
+}
+
+.wt-live2 [data-comp] {
+  pointer-events: visiblePainted;
+}
+
+.wt-stage[data-focus] [data-comp]:not([data-on]) {
+  --anatomy-hi: var(--wt-mid);
+  --anatomy-mid: var(--wt-lo);
+  --anatomy-lo: var(--wt-faint);
+  --anatomy-faint: color-mix(in srgb, var(--wt-faint) 60%, var(--wt-paper));
+  --anatomy-lit: var(--wt-mid);
+  --anatomy-dot: var(--wt-lo);
+  --anatomy-face: var(--wt-paper);
+  --anatomy-top: color-mix(in srgb, var(--wt-top) 50%, var(--wt-paper));
+  --anatomy-lit-top: color-mix(in srgb, var(--wt-top) 50%, var(--wt-paper));
+  --anatomy-lit-shade: color-mix(in srgb, var(--wt-s2) 40%, var(--wt-paper));
+  --anatomy-shade-0: color-mix(in srgb, var(--wt-s0) 40%, var(--wt-paper));
+  --anatomy-shade-1: color-mix(in srgb, var(--wt-s1) 40%, var(--wt-paper));
+  --anatomy-shade-2: color-mix(in srgb, var(--wt-s2) 40%, var(--wt-paper));
+  --anatomy-shade-3: color-mix(in srgb, var(--wt-s3) 40%, var(--wt-paper));
+}
+
+.wt-stage[data-focus] [data-comp][data-on] {
+  --anatomy-hi: var(--wt-lit);
+  --anatomy-mid: var(--wt-hi);
+  --anatomy-lo: var(--wt-mid);
+  --anatomy-faint: var(--wt-lo);
+}
+
+.wt-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 24px;
+  min-height: 104px;
+  margin: 14px 0 0;
+  padding: 12px 14px 12px;
+  box-shadow: 0 0 0 1px var(--anatomy-faint);
+  color: var(--anatomy-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.wt-panel:not([data-empty]) {
+  box-shadow: 0 0 0 1px var(--anatomy-mid);
+}
+
+.wt-panel-text {
+  display: grid;
+  gap: 4px;
+}
+
+.wt-panel-head {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.wt-panel-n {
+  color: var(--anatomy-muted);
+  font: 500 10.5px/1 var(--anatomy-mono);
+  letter-spacing: 0.06em;
+}
+
+.wt-panel-name {
+  color: var(--anatomy-strong);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.wt-panel-live {
+  max-width: 34ch;
+  padding: 3px 0 0;
+  color: var(--anatomy-strong);
+  font: 11px/1.45 var(--anatomy-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  text-align: right;
+}
+
+.wt-panel-hint {
+  display: none;
+  align-self: center;
+  color: var(--anatomy-muted);
+}
+
+.wt-panel[data-empty] {
+  align-items: center;
+}
+
+.wt-panel[data-empty] .wt-panel-hint {
+  display: block;
+}
+
+.wt-panel[data-empty] .wt-panel-head,
+.wt-panel[data-empty] .wt-panel-does,
+.wt-panel[data-empty] .wt-panel-live {
+  display: none;
+}
+
+.wt-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--anatomy-faint);
+}
+
+.wt-parts > button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 8px 3px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--anatomy-faint);
+  color: var(--anatomy-text);
+  font: 11px/1.3 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  cursor: pointer;
+}
+
+.wt-parts > button i {
+  font: normal 9.5px/1 var(--anatomy-mono);
+  color: var(--anatomy-muted);
+}
+
+.wt-parts > button:hover,
+.wt-parts > button[aria-pressed="true"] {
+  box-shadow: 0 0 0 1px var(--anatomy-hi);
+  color: var(--anatomy-strong);
+}
+
+.wt-parts > button:focus-visible {
+  outline: 1px solid var(--anatomy-muted);
+  outline-offset: 3px;
+}
+
+/* power curve */
+.wt-chart {
+  margin: 10px 0 0;
+  padding: 10px 6px 0;
+  border-top: 1px solid var(--anatomy-faint);
+}
+
+.wt-curve {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--anatomy-mono);
+}
+
+.wt-ch-axis,
+.wt-ch-tick {
+  fill: none;
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-tick {
+  stroke: var(--anatomy-lo);
+}
+
+.wt-ch-tick.wt-ch-major {
+  stroke: var(--anatomy-mid);
+}
+
+.wt-ch-grid {
+  fill: none;
+  stroke: var(--anatomy-faint);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-storm {
+  fill: var(--wt-storm);
+}
+
+.wt-ch-curve {
+  fill: none;
+  stroke: var(--anatomy-hi);
+  stroke-width: 1.3px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-drop {
+  fill: none;
+  stroke: var(--anatomy-hi);
+  stroke-width: 1px;
+  stroke-dasharray: 2 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-mark {
+  fill: none;
+  stroke: var(--anatomy-lo);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-markdot {
+  fill: var(--anatomy-card);
+  stroke: var(--anatomy-hi);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-num,
+.wt-ch-unit {
+  fill: var(--anatomy-muted);
+  font-size: 9px;
+  letter-spacing: 0.03em;
+}
+
+.wt-ch-storm-label {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.wt-ch-label {
+  fill: var(--anatomy-text);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.wt-ch-value {
+  fill: var(--anatomy-strong);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wt-ch-dropline {
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-ring {
+  fill: none;
+  stroke: var(--anatomy-lit);
+  stroke-width: 0.8px;
+  vector-effect: non-scaling-stroke;
+}
+
+.wt-ch-dot {
+  fill: var(--anatomy-lit);
+}
+
+/* controls: a dock that stays in view while both figures scroll past */
+.wt-dock {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 14px 18px 12px;
+  background: color-mix(in srgb, var(--anatomy-card) 92%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 1px var(--anatomy-mid), 0 8px 24px -12px #0000004d;
+}
+
+.wt-sliders {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 22px;
+}
+
+.wt-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+  font: 11px/1.4 var(--anatomy-mono);
+  color: var(--anatomy-muted);
+  letter-spacing: 0.02em;
+}
+
+.wt-control > span {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.wt-control > output {
+  color: var(--anatomy-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.wt-control > input {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 2px 0 0;
+  height: 18px;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.wt-control > input::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--anatomy-lo);
+  border-radius: 1px;
+}
+
+.wt-control > input::-moz-range-track {
+  height: 2px;
+  background: var(--anatomy-lo);
+  border-radius: 1px;
+}
+
+.wt-control > input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--anatomy-card);
+  border: 1px solid var(--anatomy-hi);
+}
+
+.wt-control > input::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--anatomy-card);
+  border: 1px solid var(--anatomy-hi);
+}
+
+.wt-control > input:focus-visible,
+.wt-presets > button:focus-visible {
+  outline: 1px solid var(--anatomy-muted);
+  outline-offset: 4px;
+}
+
+.wt-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wt-presets > button {
+  display: inline-grid;
+  gap: 1px;
+  min-width: 92px;
+  padding: 5px 10px 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--anatomy-lo);
+  color: var(--anatomy-text);
+  font: 10.5px/1.25 var(--anatomy-mono);
+  text-align: left;
+  cursor: pointer;
+}
+
+.wt-presets > button b {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--anatomy-strong);
+}
+
+.wt-presets > button i {
+  font-style: normal;
+  color: var(--anatomy-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.wt-presets > button:hover,
+.wt-presets > button[data-on],
+.wt-presets > button[aria-pressed="true"] {
+  box-shadow: 0 0 0 1px var(--anatomy-hi);
+}
+
+.wt-presets > [data-auto] {
+  margin-left: auto;
+}
+
+@media (max-width: 560px) {
+  .wt-stage {
+    width: 116%;
+    margin: -4% -8% -2%;
+  }
+
+  .wt-sliders {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .wt-control {
+    grid-template-columns: 92px 1fr 74px;
+    gap: 0 8px;
+    font-size: 10px;
+  }
+
+  .wt-control > input {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .wt-control > output {
+    text-align: right;
+  }
+
+  .wt-dock {
+    gap: 6px;
+    padding: 8px 10px 9px;
+    bottom: 6px;
+  }
+
+  .wt-presets {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .wt-presets > button {
+    min-width: 0;
+    flex: 1 1 0;
+    padding: 4px 5px 3px;
+    font-size: 9px;
+  }
+
+  .wt-presets > button b {
+    letter-spacing: 0.02em;
+  }
+
+  .wt-presets > [data-auto] {
+    margin-left: 0;
+  }
+
+  .wt-panel {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    font-size: 12.5px;
+  }
+
+  .wt-panel-live {
+    max-width: none;
+    padding-top: 6px;
+    border-top: 1px solid var(--anatomy-faint);
+    text-align: left;
+  }
+
+  .wt-parts {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .wt-parts > button {
+    flex: none;
+  }
+
+  .wt-ch-num,
+  .wt-ch-unit {
+    font-size: 14px;
+  }
+
+  .wt-ch-label {
+    font-size: 13.5px;
+    letter-spacing: 0.03em;
+  }
+
+  .wt-ch-value {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt-fallback .iso-line {
+    animation: none;
+  }
+}

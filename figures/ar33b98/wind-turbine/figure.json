@@ -1,0 +1,37 @@
+{
+  "id": "wind-turbine",
+  "title": "How a wind turbine works",
+  "author": "ar33b98",
+  "prompt": "explain how a wind turbine works, interactive (use a three-blade horizontal-axis turbine with a geared nacelle). Adjust wind speed, wind direction, and blade pitch angle. Clearly compare power output at cut-in, rated and cut-out speed, with the brake engaging in storm conditions. Show airflow streamlines bending over the blades and the nacelle cutaway (gearbox, generator, yaw motor) using WebGL. Then: select each nacelle component to see its function.",
+  "kind": "SVG + WebGL",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "minutes": 98,
+  "tokens": 1716755,
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/wind-turbine-light.html",
+    "dark": "src/wind-turbine.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "wind",
+    "energy",
+    "turbine",
+    "webgl"
+  ],
+  "created": "2026-10-15"
+}
