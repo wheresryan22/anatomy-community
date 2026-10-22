@@ -1,0 +1,32 @@
+{
+  "id": "weather-wet-road",
+  "title": "Weather: Wet road, skid tester over a wet plate: tread squeezing water",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Wet road\", drawn as a real object (skid tester over a wet plate: tread squeezing water through its grooves, hydroplane wedge, puddle ripples) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/wet-road.html",
+    "light": "src/wet-road-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "wet-road"
+  ],
+  "created": "2026-10-22"
+}
