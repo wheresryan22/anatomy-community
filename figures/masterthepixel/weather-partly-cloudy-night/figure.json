@@ -1,0 +1,32 @@
+{
+  "id": "weather-partly-cloudy-night",
+  "title": "Weather: Partly cloudy night, moon gimbal and star board with a sliding",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Partly cloudy night\", drawn as a real object (moon gimbal and star board with a sliding cloud-gate shade) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/partly-cloudy-night.html",
+    "light": "src/partly-cloudy-night-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "partly-cloudy-night"
+  ],
+  "created": "2026-10-22"
+}
