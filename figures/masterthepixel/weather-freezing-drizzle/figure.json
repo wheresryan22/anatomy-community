@@ -1,0 +1,32 @@
+{
+  "id": "weather-freezing-drizzle",
+  "title": "Weather: Freezing drizzle, tipping-bucket rain gauge rimed with frost, drops",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Freezing drizzle\", drawn as a real object (tipping-bucket rain gauge rimed with frost, drops freezing to beads) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/freezing-drizzle.html",
+    "light": "src/freezing-drizzle-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "freezing-drizzle"
+  ],
+  "created": "2026-10-22"
+}
