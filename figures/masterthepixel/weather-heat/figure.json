@@ -1,0 +1,32 @@
+{
+  "id": "weather-heat",
+  "title": "Weather: Extreme heat, mercury thermometer tower on a sun-baked pavement plate",
+  "author": "masterthepixel",
+  "prompt": "An animated weather icon for \"Extreme heat\", drawn as a real object (mercury thermometer tower on a sun-baked pavement plate, column climbing, heat shimmer rising) with many small precise parts. One of a set of weather icons for a daily local-weather post.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Sonnet 5.5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "dark": "src/heat.html",
+    "light": "src/heat-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "weather",
+    "heat"
+  ],
+  "created": "2026-10-22"
+}
