@@ -1,0 +1,33 @@
+{
+  "id": "roadster-loop",
+  "title": "Roadster Inverted Loop Rig",
+  "author": "zhangyiabc",
+  "prompt": "Draw the full sequence of a Roadster inverted ramp run and mid-air spin landing: a C-shaped open steel truss ramp; twin underbody turbine fans use negative-pressure adhesion to climb a 90 degree vertical wall, crest past the vertical upside down, and leave the lip inverted at speed; mid-air, cold-gas thrusters barrel-roll it 180 degrees upright, then trim attitude, keeping forward momentum along a parabolic arc; four main columns fire for a smooth powered descent, a rolling touchdown with no bounce, and a taxi out of the fog. Includes strobe ghosts and live telemetry.",
+  "kind": "SVG",
+  "agent": "Codex",
+  "model": "Qwen3.8-Max",
+  "skill": {
+    "kit": "sha256:9d0ff76ab0c60dc2b56dbba8701ff1ee5220c91490bfc9b568deb57374f409de"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/roadster-loop-light.html",
+    "dark": "src/roadster-loop.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "roadster",
+    "loop",
+    "stunt"
+  ],
+  "created": "2026-10-24"
+}
