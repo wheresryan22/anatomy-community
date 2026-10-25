@@ -1,0 +1,35 @@
+{
+  "id": "kaco-heart-pen",
+  "title": "Kaco First Roller heart pen",
+  "author": "lakhanadewar",
+  "prompt": "Create an anatomy breakdown of the Kaco First Roller Heart Pen: minimalist matte white or black twist-action rollerball, clip-less, flat cap top. Twisting extends a 0.5 mm fine tip from a tapered nose cone while a hidden 3D red heart shifts into a clear window on the upper barrel; twisting back hides both. Include the lower grip barrel, mid-body twist seam, translucent window, red heart core, upper barrel and quick-dry black gel ink refill, mapped top to bottom and outer to inner.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "minutes": 20,
+  "skill": {
+    "kit": "sha256:9d0ff76ab0c60dc2b56dbba8701ff1ee5220c91490bfc9b568deb57374f409de"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/kaco-heart-pen-light.html",
+    "dark": "src/kaco-heart-pen.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "tags": [
+    "pen",
+    "mechanism",
+    "twist"
+  ],
+  "created": "2026-10-25"
+}
