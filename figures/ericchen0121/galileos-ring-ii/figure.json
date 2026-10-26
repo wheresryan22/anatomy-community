@@ -1,0 +1,29 @@
+{
+  "id": "galileos-ring-ii",
+  "title": "Galileo's Ring II",
+  "author": "ericchen0121",
+  "prompt": "show a top down view of galileos ring 2, as described by this video's cc: https://www.youtube.com/shorts/l1rYPY-dCAk and images from there from 40s-50s in the video show it in action. i want to see it moving and be able to change parameters to get different patterns. ultimately the finished anatomy will show the patterns playing from above",
+  "kind": "SVG",
+  "agent": "Other",
+  "model": "Grok 4.7 Medium Fast",
+  "minutes": 35,
+  "skill": {
+    "kit": "sha256:9e6ccd968f582ecd44654b0b75a981d2dde09666bd0d36cb39b2f56c3469a720"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/galileo-ring-light.html",
+    "dark": "src/galileo-ring.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "created": "2026-10-26"
+}
