@@ -1,0 +1,30 @@
+{
+  "id": "assembled-meter",
+  "title": "The assembled meter",
+  "author": "Jeremy-434",
+  "prompt": "explica el funcionamiento del hardware ya ensamblado como deberia quedar",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-haiku-5-5",
+  "minutes": 1,
+  "tokens": 27160,
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/assembly-light.html",
+    "dark": "src/assembly.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "created": "2026-10-29"
+}
