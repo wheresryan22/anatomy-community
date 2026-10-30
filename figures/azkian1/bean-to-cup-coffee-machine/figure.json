@@ -1,0 +1,28 @@
+{
+  "id": "bean-to-cup-coffee-machine",
+  "title": "Bean-to-cup coffee machine",
+  "author": "azkian1",
+  "prompt": "Explain how an automatic bean-to-cup coffee machine works: bean hopper, burr grinder, tamping brew unit, water tank, pump, thermoblock, milk frother, sugar dispenser, grounds bin; light theme, English, 1x/2x/5x speed, interactive",
+  "kind": "SVG",
+  "agent": "Other",
+  "skill": {
+    "kit": "sha256:9d0ff76ab0c60dc2b56dbba8701ff1ee5220c91490bfc9b568deb57374f409de"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ],
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "pages": {
+    "light": "src/bean-to-cup-light.html",
+    "dark": "src/bean-to-cup.html"
+  },
+  "preview": "light",
+  "audit": true,
+  "license": "MIT",
+  "created": "2026-10-30"
+}
