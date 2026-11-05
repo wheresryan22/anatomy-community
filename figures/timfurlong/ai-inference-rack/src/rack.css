@@ -1,0 +1,45 @@
+.ar-stage { position: relative; outline: none; touch-action: pan-y; --gpu: 0.15; --nv: 0; --sw: 0.15; }
+.ar-stage svg { display: block; width: 100%; height: auto; }
+
+/* activity: GPU LEDs, switch LEDs, and light running along the NVLink spine */
+.ar-led circle { fill: var(--anatomy-lit); stroke: none; }
+.ar-led-gpu circle { opacity: var(--gpu); }
+.ar-led-sw circle { opacity: var(--sw); }
+.ar-glow { opacity: var(--nv); stroke-width: 0.9; }
+.ar-pulse circle { fill: var(--anatomy-lit); stroke: var(--anatomy-paper); stroke-width: 0.6; }
+
+/* selection: the picked group becomes the one lit accent, everything else steps down */
+.ar-stage[data-focus] .it:not([data-on]) {
+  --anatomy-hi: var(--anatomy-mid);
+  --anatomy-mid: var(--anatomy-lo);
+}
+.it[data-on] {
+  --anatomy-hi: var(--anatomy-lit);
+  --anatomy-mid: var(--anatomy-hi);
+}
+.it[data-on] .iso-top,
+.it[data-on] .tb-shine { fill: var(--anatomy-lit-top); }
+.it[data-on] .iso-shade,
+.it[data-on] .tb-body { fill: var(--anatomy-lit-shade); }
+.it[data-on] [data-seamless] > .iso-shade { stroke: var(--anatomy-lit-shade); }
+.it[data-on] [data-seamless] > .iso-top { stroke: var(--anatomy-lit-top); }
+
+/* the parts list under the drawing */
+.ar-parts { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 2px 14px; margin: 14px 0 4px; padding: 0; list-style: none; }
+.ar-part { display: flex; gap: 8px; align-items: baseline; width: 100%; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--anatomy-text); font: inherit; font-size: 12.5px; text-align: left; cursor: pointer; }
+.ar-part span { font-family: var(--anatomy-mono); font-size: 10.5px; color: var(--anatomy-muted); letter-spacing: 0.06em; }
+.ar-part:hover, .ar-part[data-on] { background: var(--anatomy-face); }
+.ar-part[data-on] span { color: var(--anatomy-strong); }
+.ar-part:focus-visible { outline: 1.5px solid var(--anatomy-lit); outline-offset: 1px; }
+.ar-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 2px; }
+.ar-btn { height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--anatomy-face); color: var(--anatomy-strong); font-family: var(--anatomy-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+.ar-btn[aria-pressed="true"] { background: var(--anatomy-strong); color: var(--anatomy-card); }
+.ar-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ar-phase { font-family: var(--anatomy-mono); font-size: 11px; color: var(--anatomy-muted); min-height: 1.6em; margin: 4px 0 0; letter-spacing: 0.03em; }
+
+@media (prefers-reduced-motion: reduce) { .ar-glow { opacity: 0.6; } }
+
+@media (max-width: 520px) {
+  .ar .iso-plate { overflow: hidden; }
+  .ar-stage svg { transform: scale(1.2); transform-origin: 48% 52%; }
+}
