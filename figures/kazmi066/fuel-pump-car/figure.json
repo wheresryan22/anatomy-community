@@ -1,0 +1,27 @@
+{
+  "id": "fuel-pump-car",
+  "title": "Fuel pump and car: fill, run, empty",
+  "author": "kazmi066",
+  "prompt": "/anatomy a car on a plinth beside a fuel pump, hose plugged into the tank. Loop: the pump fills the tank (orange fuel runs down the hose, the pump display counts up, a cut-away window shows the level rising), the car runs and drains it with exhaust puffs and lit tail lights, then the tank is empty and the lights go out. Light and dark pages.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "Claude Opus 5.5",
+  "skill": {
+    "kit": "sha256:9d0ff76ab0c60dc2b56dbba8701ff1ee5220c91490bfc9b568deb57374f409de",
+    "commit": "1482e8469b0a9e0d8cc18ea2740a01423d29ae80"
+  },
+  "build": [
+    [
+      "src/build.mjs"
+    ]
+  ],
+  "license": "MIT",
+  "tags": [
+    "car",
+    "fuel-pump",
+    "petrol",
+    "isometric",
+    "loop"
+  ],
+  "created": "2026-11-13"
+}
