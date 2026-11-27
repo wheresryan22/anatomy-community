@@ -1,0 +1,30 @@
+{
+  "id": "agent-socket-switchboard",
+  "title": "Agent Socket: one link, any agent, as a patch switchboard",
+  "author": "repalash",
+  "prompt": "Draw the relay behind Agent Socket as a real object: a small patch switchboard on a bench plate. Three callers (a server rack, a terminal, a tape reader) are AI agents; patch cords into the switchboard's sockets are links to a laptop (a browser tab) and an app. Interactive: pull a plug to end a link, close the laptop and the switchboard holds the line.",
+  "kind": "SVG",
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "skill": {
+    "kit": "sha256:88e307d515b00831262bb91c32be1c68e4c7d93e3f898f9cea8cfa7ee84ff425"
+  },
+  "build": [
+    [
+      "src/build.mjs",
+      "--light"
+    ]
+  ],
+  "pages": {
+    "light": "src/switchboard-light.html"
+  },
+  "preview": "light",
+  "license": "MIT",
+  "tags": [
+    "networking",
+    "relay",
+    "ai-agents",
+    "interactive"
+  ],
+  "created": "2026-10-14"
+}
